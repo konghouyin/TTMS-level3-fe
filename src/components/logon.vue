@@ -75,8 +75,8 @@ export default {
     submitForm (formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          Axios.send('/register', 'post', {
-            username: this.logon.user,
+          Axios.send('/account/reg', 'post', {
+            name: this.logon.user,
             password: this.logon.pass
           }).then(res => {
             console.log(res)
