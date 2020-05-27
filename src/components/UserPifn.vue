@@ -13,9 +13,9 @@
         </el-radio-group>
       </el-form-item>
       <el-form-item label="从事行业" prop="region">
-        <el-select v-model="ruleForm.region" placeholder="请选择活动区域">
-          <el-option label="区域一" value="shanghai"></el-option>
-          <el-option label="区域二" value="beijing"></el-option>
+        <el-select v-model="ruleForm.region" placeholder="请选择职务">
+          <el-option label="员工" value="shanghai"></el-option>
+          <el-option label="总监" value="beijing"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="生日" required>
@@ -31,9 +31,9 @@
           </el-form-item>
         </el-col>
       </el-form-item>
-      <el-form-item label="即时配送" prop="delivery">
+      <!-- <el-form-item label="即时配送" prop="delivery">
         <el-switch v-model="ruleForm.delivery"></el-switch>
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item label="兴趣" prop="type">
         <el-checkbox-group v-model="ruleForm.type">
           <el-checkbox label="体育" name="type"></el-checkbox>
@@ -46,7 +46,7 @@
         <el-input type="textarea" v-model="ruleForm.desc"></el-input>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="submitForm('ruleForm')">立即创建</el-button>
+        <el-button type="primary" @click="submitForm('ruleForm')">立即修改</el-button>
         <el-button @click="resetForm('ruleForm')">重置</el-button>
       </el-form-item>
     </el-form>
@@ -70,11 +70,11 @@ export default {
       },
       rules: {
         name: [
-          { required: true, message: '请输入活动名称', trigger: 'blur' },
+          { required: true, message: '请输入昵称', trigger: 'blur' },
           { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
         ],
         region: [
-          { required: true, message: '请选择活动区域', trigger: 'change' }
+          { required: true, message: '请选择职业', trigger: 'change' }
         ],
         date1: [
           { type: 'date', required: true, message: '请选择日期', trigger: 'change' }
@@ -89,7 +89,7 @@ export default {
           { required: true, message: '请选择活动资源', trigger: 'change' }
         ],
         desc: [
-          { required: true, message: '请填写活动形式', trigger: 'blur' }
+          { required: true, message: '请填写个性签名', trigger: 'blur' }
         ]
       }
     }
