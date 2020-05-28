@@ -33,14 +33,15 @@
                 ]
             }
         },
+		
+		
         mounted() {
-            Axios.send('/display', 'post', {}).then(res => {
+           /* Axios.send('/display', 'post', {}).then(res => {
                 console.log(res)
                 let list = []
                 if (res.obj.length > 4) {
                     for (var i = 0; i < 4; i++) {
                         list.push({pic:res.obj[i].play_pic,id:res.obj[i].play_id})
-
                     }
                 } else {
                     res.obj.forEach(function(item) {
@@ -54,7 +55,29 @@
             }).catch(err => {
                 throw err
             })
+			 */
+			console.log(2333)
+			Axios.send('/playAll?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpbmZvIjp7InVzZXJfaWQiOjIsInVzZXJfbmFtZSI6IjEyMzQiLCJ1c2VyX3N0YXR1cyI6IjEsMiwzLDQsNSw2LDcsOCw5In0sImlhdCI6MTU5MDY2MTMxMCwiZXhwIjoxNTkwODM0MTEwfQ.C5LyC-tKn7E9lWGlYOwjWBvYLGAyDtkkBh4f1v_JKAs', 'get', {}).then(res => {
+			    console.log(res)
+			    let list = []
+			    if (res.obj.length > 4) {
+			        for (var i = 0; i < 4; i++) {
+			            list.push({pic:res.obj[i].play_pic,id:res.obj[i].play_id})
+			        }
+			    } else {
+			        res.obj.forEach(function(item) {
+			            list.push({pic:item.play_pic,id:item.play_id})
+			        })
+			    }
+			    this.formdata = list
+			}, error => {
+			    console.log('displayAxiosError', error)
+			}).catch(err => {
+			    throw err
+			})
         },
+
+		
         components: {
             uModl,
         },

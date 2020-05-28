@@ -33,6 +33,7 @@ export default {
 }
 
 function JSONtoString (data) {
+	console.log(data);
 	data.token=localStorage.getItem("token");
 	return JSON.stringify(data);
 }
