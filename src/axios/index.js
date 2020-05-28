@@ -1,18 +1,8 @@
 import axios from 'axios'
 
 axios.defaults.timeout = 20000
-axios.defaults.baseURL = 'http://localhost:8085/ttms-javaweb'
+axios.defaults.baseURL = 'http://132.232.169.227:517/TTMS-v3'
 axios.defaults.withCredentials = true
-
-// 添加请求拦截器
-axios.interceptors.request.use(function (config) {
-  // 在发送请求之前做些什么
-  config.transformRequest = [JSONtoString]
-  return config
-}, function (error) {
-  // 对请求错误做些什么
-  return Promise.reject(error)
-})
 
 // 添加请求拦截器
 axios.interceptors.request.use(function (config) {
@@ -26,8 +16,8 @@ axios.interceptors.request.use(function (config) {
 
 axios.interceptors.response.use(function (response) {
 
-  if (response.data.style == 1) {
-    return Promise.resolve(response.data.data)
+  if (response.data.style === 1) {
+    return Promise.resolve(response.data)
   } else {
     return Promise.reject(response.data)
   }
@@ -43,9 +33,6 @@ export default {
 }
 
 function JSONtoString (data) {
-  let array = []
-  for (let item in data) {
-    array.push(item + '=' + data[item])
-  }
-  return array.join('&')
+	data.token=localStorage.getItem("token");
+	return JSON.stringify(data);
 }
