@@ -7,6 +7,7 @@
                 <div class="timg">
                     <el-image :src="src"></el-image>
                 </div>
+				
                 <div class="nei">
                     <h3 class="name">{{name}}</h3>
                     <div style="margin-bottom: 14px; height: 23.2px; font-size: 18px;">{{ename}}</div>
@@ -34,10 +35,27 @@
                         <div style="height: 12px; font-size: 12px; margin-bottom: 9px;">累积票房</div>
                         <div><span style="color: #FFFFFF;">{{money}}</span>
                             <div style="padding-left: 4px;display: inline;">万</div>
-                        </div>
+                        </div>			
                     </div>
+					
+					<div style="height: 380px; width: 300px;margin-left: 600px;margin-top: -220px;">
+					    <a href="https://vfx.mtime.cn/Video/2019/08/21/mp4/190821174702960972.mp4" style="width: 140px; height:100px ;margin-right: 10px;position: relative;">
+					      <img src="http://img5.mtime.cn/mg/2019/08/27/095059.93451706_235X132X4.jpg" style="width: 140px; height:100px" />
+					      <em></em>
+					    </a>
+					    <a src="" style="width: 140px; height:100px ;margin-left: 10px;"></a>
+					</div>
+					<div style="height: 380px; width: 300px;margin-left: 600px;margin-top: -260px;">
+					    <a href="https://vfx.mtime.cn/Video/2019/08/21/mp4/190821174702960972.mp4" style="width: 140px; height:100px ;margin-right: 10px;position: relative;">
+					      <img src="http://img5.mtime.cn/mg/2019/08/27/095059.93451706_235X132X4.jpg" style="width: 140px; height:100px" />
+					      <em></em>
+					    </a>
+					    <a src="" style="width: 140px; height:100px ;margin-left: 10px;"></a>
+					</div>
+	
                 </div>
-            </div>
+            
+			</div>
         </div>
         <div style="width: 100%;display: flex; justify-content: center;">
             <div class="clear" style="min-width: 1200px;">
