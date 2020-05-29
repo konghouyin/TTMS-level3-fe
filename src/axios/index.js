@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 axios.defaults.timeout = 20000
-axios.defaults.baseURL = 'http://132.232.169.227:517/TTMS-v3/api'
+axios.defaults.baseURL = 'http://132.232.169.227:517/TTMS-v3'
 axios.defaults.withCredentials = true
 
 // 添加请求拦截器
