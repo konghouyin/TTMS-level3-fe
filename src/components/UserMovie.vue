@@ -58,7 +58,7 @@
             })
 			 */
 			console.log(2333)
-			Axios.send('/playAll', 'get', {}).then(res => {
+			Axios.send('/api/playAll', 'get', {}).then(res => {
 				console.log(res)
 				let list = []
 				if (res.data.length > 4) {
