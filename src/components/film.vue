@@ -206,8 +206,9 @@
 	    throw err
 	  }),
 	  
-	  
-	  Axios.send('/displayone', 'post', {
+	  //拿到具体剧目信息
+	  /* console.log(this.$router.history.current.query.id); */
+	 /* Axios.send('/displayone', 'post', {
 	      playid: this.$router.history.current.query.id,
 	  }).then(res => {
 	      this.src=res.obj.play_pic;
@@ -216,6 +217,22 @@
 	      this.type=res.obj.play_type;
 	      this.length=res.obj.play_length;
 	      this.local=res.obj.play_country;
+	      console.log(res)
+	  }, error => {
+	      console.log('displayoneAxiosError', error)
+	  }).catch(err => {
+	      throw err
+	  }) */
+	  
+	  Axios.send('/palyMain', 'get', {
+	      id: this.$router.history.current.query.id,
+	  }).then(res => {
+	      this.src=res.data.play_pic;
+	      this.text=res.data.play_message;
+	      this.name=res.data.play_name;
+	      this.type=res.data.play_type;
+	      this.length=res.data.play_length;
+	      this.local=res.data.play_country;
 	      console.log(res)
 	  }, error => {
 	      console.log('displayoneAxiosError', error)
