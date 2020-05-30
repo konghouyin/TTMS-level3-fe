@@ -40,7 +40,8 @@
             }
         },
         mounted(){
-            Axios.send('/getplaycomment', 'post', {
+			///getplaycomment
+            Axios.send('', 'post', {
                 playid: this.$router.history.current.query.id,
             }).then(res => {
                 console.log(res)

@@ -1,10 +1,11 @@
 <template>
-  <div style="margin-left: 20px;margin-top: 20px; width: 106px; height: 203.4px; float: left;">
-    <el-image :src="imgsrc"></el-image>
-    <div class="title1">{{name}}</div>
-    <div class="title1" style="color: #ffb400;">{{rate}}</div>
-  </div>
-
+	<div>
+		<div style="margin-left: 20px;margin-top: 20px; width: 106px; height: 203.4px; float: left;" v-for="item in ggh">
+			<el-image :src="item.img"  style="width: 110px; height: 154px;"></el-image>
+			<div class="title1">{{item.name}}</div>
+		<!-- 	<div class="title1" style="color: #ffb400;">{{rate}}</div> -->
+		</div>
+	</div>
 </template>
 
 <script>
@@ -15,7 +16,10 @@
         name:'一百零八',
         rate:'9.2'
       }
-    }
+    },
+	props: {
+	  ggh: Array
+	},
   }
 </script>
 

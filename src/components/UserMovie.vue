@@ -57,7 +57,6 @@
                 throw err
             })
 			 */
-			console.log(2333)
 			Axios.send('/api/playAll', 'get', {}).then(res => {
 				console.log(res)
 				let list = []

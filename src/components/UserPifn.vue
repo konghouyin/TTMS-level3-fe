@@ -12,12 +12,16 @@
           <el-radio label="女"></el-radio>
         </el-radio-group>
       </el-form-item>
-      <el-form-item label="从事行业" prop="region">
+     <!-- <el-form-item label="从事行业" prop="region">
         <el-select v-model="ruleForm.region" placeholder="请选择职务">
           <el-option label="员工" value="shanghai"></el-option>
           <el-option label="总监" value="beijing"></el-option>
         </el-select>
-      </el-form-item>
+      </el-form-item> -->
+	  <!-- 电话号码 -->
+	  <el-form-item label="电话号码" prop="name">
+		 <el-input v-model="ruleForm.name"></el-input>
+	  </el-form-item>
       <el-form-item label="生日" required>
         <el-col :span="11">
           <el-form-item prop="date1">
@@ -70,8 +74,8 @@ export default {
       },
       rules: {
         name: [
-          { required: true, message: '请输入昵称', trigger: 'blur' },
-          { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+          { required: true, message: '请输入电话号码', trigger: 'blur' },
+          { min: 11, max: 11, message: '长度在 11 个字符', trigger: 'blur' }
         ],
         region: [
           { required: true, message: '请选择职业', trigger: 'change' }
