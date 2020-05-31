@@ -39,11 +39,11 @@
             }
         },
         mounted() {
-            Axios.send('/cinemaQuery', 'get', null).then(res => {
+            Axios.send('/api/roomAll', 'get', {}).then(res => {
                 console.log(res)
 
-                this.tableData = res.obj.map((item) => {
-                    item.room_status = item.room_status == 1 ? "启用" : "停用"
+                this.tableData = res.data.map((item) => {
+                    item.room_status = item.room_status == "1" ? "启用" : "停用"
                     return item
                 })
             }, error => {
@@ -55,28 +55,37 @@
         methods: {
             handleEdit(index, row) {
 
-                this.$router.push({path: 'change', query: {id: row.room_id}})
+                this.$router.push({
+                    path: 'change',
+                    query: {
+                        id: row.room_id
+                    }
+                })
 
             },
             handleDelete(index, row) {
                 console.log(index, row);
-                Axios.send('/cinemaDelete', 'post', {
-                    room_id: row.room_id,
+                Axios.send('/api/roomDel', 'post', {
+                    id: row.room_id,
 
                 }).then(res => {
                     console.log(res)
-                    Axios.send('/cinemaQuery', 'get', null).then(res => {
-                        console.log(res)
+                    if (res.style != 1) {
+                        alert(res.msg)
+                    } else {
+                        Axios.send('/api/roomAll', 'get', {}).then(res => {
+                            console.log(res)
 
-                        this.tableData = res.obj.map((item) => {
-                            item.room_status = item.room_status == 1 ? "启用" : "停用"
-                            return item
+                            this.tableData = res.data.map((item) => {
+                                item.room_status = item.room_status == "1" ? "启用" : "停用"
+                                return item
+                            })
+                        }, error => {
+                            console.log('cinemaQueryAxiosError', error)
+                        }).catch(err => {
+                            throw err
                         })
-                    }, error => {
-                        console.log('cinemaQueryAxiosError', error)
-                    }).catch(err => {
-                        throw err
-                    })
+                    }
                 }, error => {
                     console.log('cinemaDelateAxiosError', error)
                 }).catch(err => {

@@ -9,7 +9,7 @@
                 </el-table-column>
                 <el-table-column prop="length" label="片长">
                 </el-table-column>
-                <el-table-column prop="status" :filters="[{ text: '正在热映', value: '正在热映' }, { text: '已经下线', value: '已经下线' },{ text: '即将上映', value: '即将上映' }]"
+                <el-table-column prop="status" :filters="[{ text: '正在热映', value: '已上映' }, { text: '已经下线', value: '已下线' },{ text: '即将上映', value: '即将上映' }]"
                     :filter-method="filterTag" label="状态">
                 </el-table-column>
                 <el-table-column align="right" style="padding: 0;" width="160px">
@@ -18,7 +18,7 @@
                     </div>
                     <div slot-scope="scope" style="display: flex;align-items:center;justify-content:space-around">
                         <el-button size="small" type="primary" icon="el-icon-edit" circle @click="handleEdit(scope.row)"></el-button>
-                        <el-button size="small" type="danger" icon="el-icon-delete" circle @click="handleDelete()"></el-button>
+                        <el-button size="small" type="danger" icon="el-icon-delete" circle @click="handleDelete(scope.row)"></el-button>
                     </div>
                 </el-table-column>
             </el-table>
@@ -37,10 +37,10 @@
             }
         },
         mounted() {
-            Axios.send('/display', 'post', {}).then(res => {
+            Axios.send('/api/playAll', 'get', {}).then(res => {
                 console.log(res)
                 let list = []
-                res.obj.forEach((item) => {
+                res.data.forEach((item) => {
                     list.push({
                         order: item.play_id,
                         name: item.play_name,
@@ -64,8 +64,32 @@
                     }
                 })
             },
-            handleDelete(index, row) {
-                console.log(index, row);
+            handleDelete(row) {
+                console.log(row);
+                
+                Axios.send('/api/playDel', 'post', {id:row.order}).then(res => {
+                   Axios.send('/api/playAll', 'get', {}).then(res => {
+                       console.log(res)
+                       let list = []
+                       res.data.forEach((item) => {
+                           list.push({
+                               order: item.play_id,
+                               name: item.play_name,
+                               length: item.play_length + "min",
+                               status: item.play_status
+                           })
+                       })
+                       this.tableData = list
+                   }, error => {
+                       console.log('displayAxiosError', error)
+                   }).catch(err => {
+                       throw err
+                   })
+                }, error => {
+                    console.log('displayAxiosError', error)
+                }).catch(err => {
+                    throw err
+                })
             },
             filterTag(value, row) {
                 return row.status === value;
