@@ -12,15 +12,9 @@
 				<div class="uo-o-b-t-2-o">{{item.position}}</div>				
 				<div class="uo-o-b-t-2-o">{{item.start_time}}</div>
 			  </div>
-			  
-			  <el-popover placement="top" width="160" v-model="visible">
-			    <p>这是一段内容这是一段内容确定删除吗？</p>
-			    <div style="text-align: right; margin: 0">
-			      <el-button size="mini" type="text" @click="visible = false">取消</el-button>
-			      <el-button type="primary" size="mini" @click="visible = false">确定</el-button>
-			    </div>
-			    <el-button slot="reference">删除</el-button>
-			  </el-popover>	
+			  			    
+			  <p-ticket></p-ticket>  
+				  
 			  
 			  <div class="uo-o-b-t-3">
 				￥{{item.price}}
@@ -38,12 +32,19 @@
 </template>
 
 <script>
+  import Axios from '@/axios'
+  import pTicket from './UserOneticket.vue'	
+	
+	
   export default {
     data() {
       return {
 		visible: false,
       }
     },
+	components: {
+		pOrder
+	},
 	props: {
 	  ggh: Array
 	},
