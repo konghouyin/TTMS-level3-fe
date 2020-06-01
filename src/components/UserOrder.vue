@@ -38,7 +38,7 @@ import pOrder from './Useroneorder.vue'
 export default {
   data () { 
     return {
-	  OrderData :[{
+		OrderData :[{
 	  			name: '李仁港',
 	  			type: '冒险,动作,爱情',
 	  			version: '国语2D',
@@ -50,6 +50,9 @@ export default {
 				status :'',
 				pic:'',
 	  		},],
+/* 		TicketData :[{
+			
+				},], */	
     }	
   },
   
@@ -62,6 +65,7 @@ export default {
 		console.log(res);
 		let listorder = [];
 		let flag='';
+		let tseatmessage=[];
 		res.data.forEach(function(item) {
 			if(item.orderticket_status=='1')
 			{
@@ -74,6 +78,19 @@ export default {
 			else{
 				flag="已取消";
 			}
+			
+			var tmessage=JSON.parse(item.orderticket_history);
+			
+			
+			for (var i = 0; i < tmessage.length; i++) {
+				tseatmessage.push({
+					t_id: tmessage[i],
+					seat_row :item.ticket[i].seat_row,
+					seat_col: item.ticket[i].seat_col,
+					visible : false,
+				})								
+			}		
+			
 			listorder.push({
 				name: item.play.play_name,
 				position: item.play.room_name,
@@ -81,6 +98,8 @@ export default {
 				status: flag,		
 				price: item.orderticket_money,
 				pic: item.play.play_pic,
+				visible:false,
+				TicketData : tseatmessage,				
 			})
 		})	
 		

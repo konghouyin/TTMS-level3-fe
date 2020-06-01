@@ -12,9 +12,21 @@
 				<div class="uo-o-b-t-2-o">{{item.position}}</div>				
 				<div class="uo-o-b-t-2-o">{{item.start_time}}</div>
 			  </div>
+
 			  			    
-			  <p-ticket></p-ticket>  
+			  <p-ticket v-bind:ggh="item.TicketData"></p-ticket>  
 				  
+
+			  
+			<!--  <el-popover placement="top" width="160" v-model="item.visible">
+			    <p>这是一段内容这是一段内容确定删除吗？</p>
+			    <div style="text-align: right; margin: 0">
+			      <el-button size="mini" type="text" @click="item.visible = false">取消</el-button>
+			      <el-button type="primary" size="mini" @click="item.visible = false">确定</el-button>
+			    </div>
+			    <el-button slot="reference">删除</el-button>
+			  </el-popover> -->	
+
 			  
 			  <div class="uo-o-b-t-3">
 				￥{{item.price}}
@@ -37,14 +49,16 @@
 	
 	
   export default {
+
     data() {
       return {
-		visible: false,
+
       }
     },
 	components: {
-		pOrder
+		pTicket
 	},
+
 	props: {
 	  ggh: Array
 	},
