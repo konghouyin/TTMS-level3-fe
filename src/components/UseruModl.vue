@@ -6,7 +6,6 @@
       <div class="movie_object_2">
         <router-link :to="{path:'/user/dmovie',query: {id:item.id}}" style="color:white;text-decoration: none;">选座购票</router-link>
       </div>
-
     </div>
   </div>
 </template>

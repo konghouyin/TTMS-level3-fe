@@ -48,40 +48,26 @@
 
 
 
-      <div style="margin: 0 auto; width:1050px;margin-top: 30px;" >
-        <el-table
-          :data="tableData"
-          stripe
-          style="width: 1050px " class="tex">
-          <el-table-column
-            prop="date"
-            label="放映时间"
-            width="180">
-          </el-table-column>
-          <el-table-column
-            prop="name"
-            label="语言版本"
-            width="180">
-          </el-table-column>
-          <el-table-column
-            prop="address"
-            label="放映厅">
-          </el-table-column>
-          <el-table-column
-            prop="address"
-            label="座位情况">
-          </el-table-column>
-          <el-table-column
-            prop="address"
-            label="现价/影院价（元）">
-          </el-table-column>
-          <el-table-column
-            label="选座购票" >
-             <el-button type="danger"><router-link to="/user/seat" style="color:white;text-decoration: none;">
-                  选座购票</router-link></el-button>
-          </el-table-column>
-        </el-table>
-     </div>
+	<div style="margin: 0 auto; width:1050px;margin-top: 30px;">
+		<el-table :data="tableData" stripe style="width: 1050px " class="tex">
+			<el-table-column prop="start_time" label="放映时间" width="180">
+			</el-table-column>
+			<el-table-column prop="lauguage" label="语言版本" width="180">
+			</el-table-column>
+			<el-table-column prop="studio" label="放映厅">
+			</el-table-column>
+			<el-table-column prop="address" label="座位情况">
+			</el-table-column>
+			<el-table-column prop="price" label="现价/影院价（元）">
+			</el-table-column>
+			<el-table-column label="选座购票">
+				<el-button type="danger">
+					<router-link :to="{path:'/user/seat',query: {id: prop="plan_id"}}" style="color:white;text-decoration: none;">
+						选座购票</router-link>
+				</el-button>
+			</el-table-column>
+		</el-table>	
+	</div>
   </div>
 </template>
 
@@ -91,20 +77,26 @@
         data() {
             return {
                 tableData: [{
-                    date: '2016-05-02',
-                    name: '王小虎',
-                    address: '上海市普陀区金沙江路 1518 弄'
+					plan_id:'',
+                    start_time: '2016-05-02',
+                    lauguage: '王小虎',
+                    studio: '上海市普陀区金沙江路 1518 弄',
+					price:'',
                 }, {
-                    date: '2016-05-04',
-                    name: '王小虎',
-                    address: '上海市普陀区金沙江路 1517 弄'
+                    start_time: '2016-05-02',
+                    lauguage: '王小虎',
+                    studio: '上海市普陀区金沙江路 1518 弄',
+                    price:'',
                 }, {
-                    date: '2016-05-01',
-                    name: '王小虎',
-                    address: '上海市普陀区金沙江路 1519 弄'}, {
-                    date: '2016-05-03',
-                    name: '王小虎',
-                    address: '上海市普陀区金沙江路 1516 弄'
+                    start_time: '2016-05-02',
+                    lauguage: '王小虎',
+                    studio: '上海市普陀区金沙江路 1518 弄',
+                    price:'',
+				}, {
+                    start_time: '2016-05-02',
+                    lauguage: '王小虎',
+                    studio: '上海市普陀区金沙江路 1518 弄',
+                    price:'',
                 }],
 
                 movieData: {
@@ -128,17 +120,9 @@
                 id: this.$router.history.current.query.id,
             }).then(res => {
 				var jmessage=JSON.parse(res.data.play_message);
-				/* this.src=jmessage.index.base.img;
-				this.text=jmessage.index.synopsis;
-				this.name=jmessage.index.base.name;
-				this.ename=jmessage.index.base.remane;
-				this.type=jmessage.index.base.type;
-				this.length=jmessage.index.base.runtime;
-				this.time=jmessage.index.base.time;
-				this.local=jmessage.index.base.place; */
-				
-                this.movieData.src = jmessage.index.base.img;
-                this.movieData.dirctor=jmessage.index.base.director[0].name;
+
+				this.movieData.src = jmessage.index.base.img;
+				this.movieData.dirctor=jmessage.index.base.director[0].name;
 				this.movieData.type=jmessage.index.base.type;
 				this.movieData.area=jmessage.index.base.place;
 				this.movieData.time =jmessage.index.base.runtime;
@@ -171,6 +155,30 @@
             }).catch(err => {
                 throw err
             })
+			
+			
+			
+			Axios.send('/api/planList', 'get', {
+			    id: this.$router.history.current.query.id,
+			}).then(res => {
+			    console.log(res)
+				let listplan;
+				res.data.forEach(function(item) {
+					listplan.push({
+						plan_id:item.plan_id,
+						start_time: item.plan_startime,
+						lauguage : item.plan_language,
+						studio: item.room_name,
+						price: item.plan_money,
+					})
+				})			
+				this.tableData=listplan;
+				
+			}, error => {
+			    console.log('displayoneAxiosError', error)
+			}).catch(err => {
+			    throw err
+			})
         }
     }
 </script>

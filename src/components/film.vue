@@ -38,7 +38,7 @@
                         </div>			
                     </div>
 					
-					//预告片
+					<!-- 预告片 -->
 					<div style="height: 380px; width: 300px;margin-left: 600px;margin-top: -220px;">
 					    <a :href="showmoviesrc" style="width: 170ppx; height:100px ;margin-right: 10px;position: relative;">
 						  <img :src="showmovieimg" style="width: 170px; height:100px" />
@@ -139,7 +139,7 @@
 
 </template>
 <script>
-	import Axios from '@/axios'
+  import Axios from '@/axios'
   import eventBus from '../eventBus.js'
   import fImage from './filmRecommend.vue'
   import pImage from './filmPerson.vue'

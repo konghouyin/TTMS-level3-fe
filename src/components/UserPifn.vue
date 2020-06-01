@@ -3,13 +3,13 @@
     <div class="up-left-image" :style="'background-image: url('+ruleForm.img+');'"></div>
 
     <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
-      <el-form-item label="昵称" prop="name">
+      <!-- <el-form-item label="昵称" prop="name">
         <el-input v-model="ruleForm.name"></el-input>
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item label="性别" prop="resource">
         <el-radio-group v-model="ruleForm.resource">
-          <el-radio label="男"></el-radio>
-          <el-radio label="女"></el-radio>
+          <el-radio label="1"></el-radio>
+          <el-radio label="2"></el-radio>
         </el-radio-group>
       </el-form-item>
      <!-- <el-form-item label="从事行业" prop="region">
@@ -19,8 +19,8 @@
         </el-select>
       </el-form-item> -->
 	  <!-- 电话号码 -->
-	  <el-form-item label="电话号码" prop="name">
-		 <el-input v-model="ruleForm.name"></el-input>
+	  <el-form-item label="电话号码" prop="tel">
+		 <el-input v-model="ruleForm.tel"></el-input>
 	  </el-form-item>
       <el-form-item label="生日" required>
         <el-col :span="11">
@@ -58,6 +58,7 @@
 </template>
 
 <script>
+import Axios from '@/axios'
 export default {
   data () {
     return {
@@ -68,9 +69,11 @@ export default {
         date1: '',
         date2: '',
         delivery: false,
-        type: [],
-        resource: '',
-        desc: ''
+        type: [],        
+        resource: '',   /* 性别 */
+        desc: '',	   /* 个性签名 */
+		tel:'',	
+		
       },
       rules: {
         name: [
@@ -80,15 +83,15 @@ export default {
         region: [
           { required: true, message: '请选择职业', trigger: 'change' }
         ],
-        date1: [
+      /*  date1: [
           { type: 'date', required: true, message: '请选择日期', trigger: 'change' }
         ],
         date2: [
           { type: 'date', required: true, message: '请选择时间', trigger: 'change' }
-        ],
-        type: [
+        ], */
+     /*   type: [
           { type: 'array', required: true, message: '请至少选择一个活动性质', trigger: 'change' }
-        ],
+        ], */
         resource: [
           { required: true, message: '请选择活动资源', trigger: 'change' }
         ],
@@ -98,11 +101,39 @@ export default {
       }
     }
   },
-  methods: {
+  
+/*  methods: {
     submitForm (formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           alert('submit!')
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
+    },
+    resetForm (formName) {
+      this.$refs[formName].resetFields()
+    }
+  } */
+  methods: {
+    submitForm (formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          Axios.send('/api/userChange', 'post', {
+            sex: this.ruleForm.resource,
+			signal: this.ruleForm.desc,
+            tel: this.ruleForm.tel,
+			hobby: "体育,音乐,美术" ,			
+          }).then(res => {
+            console.log(res)
+            /* this.$router.push('/user') */
+          }, error => {
+            console.log('conformperinformationAxiosError', error)
+          }).catch(err => {
+            throw err
+          })
         } else {
           console.log('error submit!!')
           return false

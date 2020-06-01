@@ -58,7 +58,7 @@
             })
 			 */
 			Axios.send('/api/playAll', 'get', {}).then(res => {
-				console.log(res)
+				/* console.log(res) */
 				let list = []
 				if (res.data.length > 4) {
 					for (var i = 0; i < 4; i++) {
