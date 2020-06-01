@@ -80,6 +80,7 @@ export default {
 				status: flag,		
 				price: item.orderticket_money,
 				pic: item.play.play_pic,
+				visible:false
 			})
 		})	
 		
