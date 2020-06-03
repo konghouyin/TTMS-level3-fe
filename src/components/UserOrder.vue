@@ -33,11 +33,12 @@
 <script>
 import Axios from '@/axios'
 import pOrder from './Useroneorder.vue'	
+
 	
 export default {
   data () { 
     return {
-	  OrderData :[{
+		OrderData :[{
 	  			name: '李仁港',
 	  			type: '冒险,动作,爱情',
 	  			version: '国语2D',
@@ -49,6 +50,9 @@ export default {
 				status :'',
 				pic:'',
 	  		},],
+/* 		TicketData :[{
+			
+				},], */	
     }	
   },
   
@@ -61,7 +65,9 @@ export default {
 		console.log(res);
 		let listorder = [];
 		let flag='';
+	
 		res.data.forEach(function(item) {
+			let tseatmessage=[];
 			if(item.orderticket_status=='1')
 			{
 				flag="已支付";
@@ -73,14 +79,32 @@ export default {
 			else{
 				flag="已取消";
 			}
+			
+			var tmessage=JSON.parse(item.orderticket_history);
+			
+			
+			for (var i = 0; i < tmessage.length; i++) {
+				tseatmessage.push({
+					t_id: tmessage[i],
+					seat_row :item.ticket[i].seat_row,
+					seat_col: item.ticket[i].seat_col,
+					visible : false,
+					orderticket_status:item.orderticket_status,
+					ticket_status:item.ticket[i].ticket_status,
+				})								
+			}		
+			
 			listorder.push({
+				orderticket_id:item.orderticket_id,
+				orderticket_status:item.orderticket_status,
 				name: item.play.play_name,
 				position: item.play.room_name,
 				start_time: item.play.plan_startime,
 				status: flag,		
 				price: item.orderticket_money,
 				pic: item.play.play_pic,
-				visible:false
+				visible:false,
+				TicketData : tseatmessage,				
 			})
 		})	
 		

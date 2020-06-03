@@ -46,6 +46,7 @@
          </div>
       </div>
 
+	
 
 
 	<div style="margin: 0 auto; width:1050px;margin-top: 30px;">
@@ -61,10 +62,13 @@
 			<el-table-column prop="price" label="现价/影院价（元）">
 			</el-table-column>
 			<el-table-column label="选座购票">
-				<el-button type="danger">
-					<router-link :to="{path:'/user/seat',query: {id: prop="plan_id"}}" style="color:white;text-decoration: none;">
-						选座购票</router-link>
-				</el-button>
+				<template slot-scope="scope">
+					<el-button type="danger" style="color: white;text-decoration: none;" @click="SeatClick(scope.row)">
+						<!-- <router-link :to="{path:'/user/seat',query: {id: prop="plan_id"}}" style="color:white;text-decoration: none;">
+							选座购票</router-link> -->
+						选座购票
+					</el-button>
+				</template>
 			</el-table-column>
 		</el-table>	
 	</div>
@@ -76,28 +80,29 @@
     export default {
         data() {
             return {
-                tableData: [{
+                tableData: [],
+				/* {
 					plan_id:'',
-                    start_time: '2016-05-02',
-                    lauguage: '王小虎',
-                    studio: '上海市普陀区金沙江路 1518 弄',
+				    start_time: '2016-05-02',
+				    lauguage: '王小虎',
+				    studio: '上海市普陀区金沙江路 1518 弄',
 					price:'',
-                }, {
-                    start_time: '2016-05-02',
-                    lauguage: '王小虎',
-                    studio: '上海市普陀区金沙江路 1518 弄',
-                    price:'',
-                }, {
-                    start_time: '2016-05-02',
-                    lauguage: '王小虎',
-                    studio: '上海市普陀区金沙江路 1518 弄',
-                    price:'',
 				}, {
-                    start_time: '2016-05-02',
-                    lauguage: '王小虎',
-                    studio: '上海市普陀区金沙江路 1518 弄',
-                    price:'',
-                }],
+				    start_time: '2016-05-02',
+				    lauguage: '王小虎',
+				    studio: '上海市普陀区金沙江路 1518 弄',
+				    price:'',
+				}, {
+				    start_time: '2016-05-02',
+				    lauguage: '王小虎',
+				    studio: '上海市普陀区金沙江路 1518 弄',
+				    price:'',
+				}, {
+				    start_time: '2016-05-02',
+				    lauguage: '王小虎',
+				    studio: '上海市普陀区金沙江路 1518 弄',
+				    price:'',
+				} */
 
                 movieData: {
                     dirctor: '李仁港',
@@ -125,15 +130,14 @@
 				this.movieData.dirctor=jmessage.index.base.director[0].name;
 				this.movieData.type=jmessage.index.base.type;
 				this.movieData.area=jmessage.index.base.place;
-				this.movieData.time =jmessage.index.base.runtime;
-				this.movieData.neirong=jmessage.index.synopsis;	
+				this.movieData.time =jmessage.index.base.runtime;			
 				this.movieData.start_time=jmessage.index.base.time;
 				this.movieData.name=jmessage.index.base.name;
                 /* this.movieData.actor =res.obj.play_performer; */
                /* this.movieData.type =res.obj.play_type;
                 this.movieData.time =res.obj.play_length;
                 this.movieData.name =res.obj.play_name;
-                this.movieData.start_time=JSON.parse(res.obj.play_message).index.base.time
+                this.movieData.start_time=JSON.parse(res.obj.play_message).index.base.time				
 
                 this.movieData.neirong = JSON.parse(res.obj.play_message).index.synopsis;
                 if(res.obj.play_performer.length>80)
@@ -147,6 +151,11 @@
                 this.type = res.obj.play_type;
                 this.length = res.obj.play_length;
                 this.local = res.obj.play_country; */
+				
+				if(jmessage.index.synopsis.length>120)
+				{
+				    this.movieData.neirong=jmessage.index.synopsis.substr(0,120)+"......";
+				}
 
                 /* this.movieData = list */
                 console.log(res)
@@ -162,7 +171,8 @@
 			    id: this.$router.history.current.query.id,
 			}).then(res => {
 			    console.log(res)
-				let listplan;
+				let listplan=[];
+				
 				res.data.forEach(function(item) {
 					listplan.push({
 						plan_id:item.plan_id,
@@ -179,7 +189,19 @@
 			}).catch(err => {
 			    throw err
 			})
-        }
+        },
+		
+		methods: {
+			SeatClick(tablerow) {
+				/* window.location.href = "/user/seat?id=" + tablerow.plan_id; */
+				this.$router.push({
+					path:'/user/seat',
+					query:{
+						plan_id:tablerow.plan_id
+					}
+				})
+			}
+		},
     }
 </script>
 

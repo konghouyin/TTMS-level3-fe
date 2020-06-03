@@ -8,8 +8,8 @@
       </el-form-item> -->
       <el-form-item label="性别" prop="resource">
         <el-radio-group v-model="ruleForm.resource">
-          <el-radio label="1"></el-radio>
-          <el-radio label="2"></el-radio>
+          <el-radio label="男"></el-radio>
+          <el-radio label="女"></el-radio>
         </el-radio-group>
       </el-form-item>
      <!-- <el-form-item label="从事行业" prop="region">
@@ -39,13 +39,36 @@
         <el-switch v-model="ruleForm.delivery"></el-switch>
       </el-form-item> -->
       <el-form-item label="兴趣" prop="type">
-        <el-checkbox-group v-model="ruleForm.type">
+        <!-- <el-checkbox-group v-model="ruleForm.type">
           <el-checkbox label="体育" name="type"></el-checkbox>
           <el-checkbox label="艺术" name="type"></el-checkbox>
           <el-checkbox label="学习" name="type"></el-checkbox>
           <el-checkbox label="音乐" name="type"></el-checkbox>
-        </el-checkbox-group>
+        </el-checkbox-group> -->
+		
+		<el-tag
+		  :key="tag"
+		  v-for="tag in dynamicTags"
+		  closable
+		  :disable-transitions="false"
+		  @close="handleClose(tag)">
+		  {{tag}}
+		</el-tag>
+		<el-input
+		  class="input-new-tag"
+		  v-if="inputVisible"
+		  v-model="inputValue"
+		  ref="saveTagInput"
+		  size="small"
+		  @keyup.enter.native="handleInputConfirm"
+		  @blur="handleInputConfirm"
+		>
+		</el-input>
+		<el-button v-else class="button-new-tag" size="small" @click="showInput">+ New Tag</el-button>										
+		
       </el-form-item>
+	  
+
       <el-form-item label="个性签名" prop="desc">
         <el-input type="textarea" v-model="ruleForm.desc"></el-input>
       </el-form-item>
@@ -62,6 +85,10 @@ import Axios from '@/axios'
 export default {
   data () {
     return {
+		dynamicTags: ['标签一', '标签二', '标签三'],
+		inputVisible: false,
+		inputValue: '',	
+		
       ruleForm: {
         img: require('@/assets/avataaars.png'),
         name: '',
@@ -117,15 +144,54 @@ export default {
       this.$refs[formName].resetFields()
     }
   } */
+	
+	mounted(){
+		var rmidsex;
+		Axios.send('/api/userMain', 'get', {}).then(res => {			
+			if(res.data.user_sex=='1')
+			{
+				rmidsex='男';
+			}
+			else{
+				rmidsex='女';
+			}					
+			console.log(res);	
+			console.log(res.data.user_hobby);
+			/* this.dynamicTags=res.data.user_hobby; */
+			this.dynamicTags =res.data.user_hobby.split(',')			
+			
+			this.ruleForm.resource=rmidsex;
+			this.ruleForm.tel=res.data.user_tel	;	
+			this.ruleForm.desc=res.data.user_signal;
+		}, error => {
+			console.log('displayperinAxiosError', error)
+		}).catch(err => {
+			throw err
+		})
+	},		
+	
+	
   methods: {
     submitForm (formName) {
+		var midsex;
+		var midhobby;
+		if(this.ruleForm.resource=='男')
+		{
+			midsex='1';
+		}
+		else{
+			midsex='2';
+		}
+		
+		midhobby=this.dynamicTags.join(',');
+
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          Axios.send('/api/userChange', 'post', {
-            sex: this.ruleForm.resource,
+          Axios.send('/api/userChange', 'post', {		  
+            sex: midsex,
 			signal: this.ruleForm.desc,
             tel: this.ruleForm.tel,
-			hobby: "体育,音乐,美术" ,			
+			hobby: midhobby ,			
           }).then(res => {
             console.log(res)
             /* this.$router.push('/user') */
@@ -142,7 +208,28 @@ export default {
     },
     resetForm (formName) {
       this.$refs[formName].resetFields()
-    }
+    },
+	
+	handleClose(tag) {
+	  this.dynamicTags.splice(this.dynamicTags.indexOf(tag), 1);
+	},
+	
+	showInput() {
+	  this.inputVisible = true;
+	  this.$nextTick(_ => {
+	    this.$refs.saveTagInput.$refs.input.focus();
+	  });
+	},
+	
+	handleInputConfirm() {
+	  let inputValue = this.inputValue;
+	  if (inputValue) {
+	    this.dynamicTags.push(inputValue);
+	  }
+	  this.inputVisible = false;
+	  this.inputValue = '';
+	}
+	
   }
 }
 </script>
@@ -164,4 +251,22 @@ export default {
      background-size: 90%;
      background-repeat: no-repeat;
   }
+  
+  /* 动态标签 */
+  .el-tag + .el-tag {
+    margin-left: 10px;
+  }
+  .button-new-tag {
+    margin-left: 10px;
+    height: 32px;
+    line-height: 30px;
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+  .input-new-tag {
+    width: 90px;
+    margin-left: 10px;
+    vertical-align: bottom;
+  }
 </style>
+

@@ -9,7 +9,7 @@
                 </div>
                 <div style="display: flex; align-items: center;margin-top: 4px;margin-bottom: 20px;">
                     <div class="date">{{item.date}}</div>
-                    <el-rate id="star-show1" :v-model="item.mark" disabled text-color="#ff9900"></el-rate>
+                    <el-rate id="star-show1" v-model="item.mark" disabled text-color="#ff9900"></el-rate>
                 </div>
                 <div class="text">{{item.text}}</div>
             </div>
@@ -41,17 +41,19 @@
         },
         mounted(){
 			///getplaycomment
-            Axios.send('', 'post', {
-                playid: this.$router.history.current.query.id,
+            Axios.send('/api/comment/get', 'post', {
+                playId: this.$router.history.current.query.id,
             }).then(res => {
                 console.log(res)
                 let list = []
 
-                res.obj.forEach(function(item) {
+                res.data.forEach(function(item) {
                     list.push({
-                        id: item.comment_id,
+                        id: item.commentId,
                         name: item.user_name,
-                        text: item.comment_message,
+                        text: item.commentText,
+						date :item.commentTime,
+						mark :item.commentLevel,
                     })
                 })
                 this.formdata = list
