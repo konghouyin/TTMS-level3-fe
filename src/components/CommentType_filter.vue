@@ -9,7 +9,7 @@
 		<!-- <input type="text" v-model="inputValue" v-on:keyup.enter="addTo" /> -->
 		<div class="message">举报类型设置</div>
 		<div class="wrap">
-			<el-button type="primary" plain class="btn" v-for="(item,index) in typeData" @click="deleteTo(index)">{{item}}</el-button>
+			<el-button type="primary" plain class="btn" v-for="(item,index) in typeData" @click="deleteTo(item.reporttypeId)">{{item.reporttypeName}}</el-button>
 		</div>
 		<el-divider></el-divider>
 		<el-input
@@ -33,13 +33,14 @@ import Axios from '@/axios'
 			}
 		},
 		mounted() {
-			Axios.send('/reportType/getreportType', 'get', {
-					  
+			Axios.send('api/reportType/all', 'POST', {
 			}).then(res => {
 			  console.log(res)
-				this.typeData = res.obj
+				this.typeData = res.data.filter(item=>{
+                    return item.reporttypeStatus==1
+                })
 			}, error => {
-			  alert('评论添加失败')
+			  alert('查询失败')
 			  console.log('commentReportError', error)
 			}).catch(err => {
 			  throw err
@@ -50,13 +51,22 @@ import Axios from '@/axios'
 				if(this.input==""){
 					return
 				}
-				this.typeData.push(this.input);
-				
-				Axios.send('/comment/report', 'post', {
-				  type:this.input,
+				Axios.send('api/reportType/add', 'post', {
+				  reporttypeName:this.input
 				}).then(res => {
-				  console.log(res)
 				  this.input="";
+                    Axios.send('api/reportType/all', 'POST', {
+                    }).then(res => {
+                      console.log(res)
+                    	this.typeData = res.data.filter(item=>{
+                            return item.reporttypeStatus==1
+                        })
+                    }, error => {
+                      alert('查询失败')
+                      console.log('commentReportError', error)
+                    }).catch(err => {
+                      throw err
+                    })
 				}, error => {
 				  alert('评论添加失败')
 				  console.log('commentAddError', error)
@@ -64,16 +74,24 @@ import Axios from '@/axios'
 				  throw err
 				})
 			},
-			deleteTo(index){
-				console.log(this.typeData)
-				console.log(this.typeData[index])
-				Axios.send('/reportType/del', 'post', {
-				  name:this.typeData[index],
+			deleteTo(id){
+				Axios.send('api/reportType/del', 'post', {
+				  reporttypeId:id
 				}).then(res => {
-				  console.log(res)
-				  this.input="";
+                    Axios.send('api/reportType/all', 'POST', {
+                    }).then(res => {
+                      console.log(res)
+                    	this.typeData = res.data.filter(item=>{
+                            return item.reporttypeStatus==1
+                        })
+                    }, error => {
+                      alert('查询失败')
+                      console.log('commentReportError', error)
+                    }).catch(err => {
+                      throw err
+                    })
 				}, error => {
-				  alert('评论添加失败')
+				  alert('删除失败')
 				  console.log('commentAddError', error)
 				}).catch(err => {
 				  throw err
@@ -82,7 +100,7 @@ import Axios from '@/axios'
 				console.log(this.typeData)
 			}
 		}
-		
+
 	}
 </script>
 
