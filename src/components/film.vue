@@ -38,9 +38,10 @@
                         </div>			
                     </div>
 					
+					<!-- 预告片 -->
 					<div style="height: 380px; width: 300px;margin-left: 600px;margin-top: -220px;">
-					    <a href="https://vfx.mtime.cn/Video/2019/08/21/mp4/190821174702960972.mp4" style="width: 140px; height:100px ;margin-right: 10px;position: relative;">
-					      <img src="http://img5.mtime.cn/mg/2019/08/27/095059.93451706_235X132X4.jpg" style="width: 140px; height:100px" />
+					    <a :href="showmoviesrc" style="width: 170ppx; height:100px ;margin-right: 10px;position: relative;">
+						  <img :src="showmovieimg" style="width: 170px; height:100px" />
 					      <em></em>
 					    </a>
 					    <a src="" style="width: 140px; height:100px ;margin-left: 10px;"></a>
@@ -60,9 +61,10 @@
         <div style="width: 100%;display: flex; justify-content: center;">
             <div class="clear" style="min-width: 1200px;">
                 <div class="tj">
+					<!-- 相关电影推荐 -->
                     <div class="mod-title">相关电影</div>
                     <div style="width: 100%; padding-top: 20px;">
-                        <f-image v-for="item in 6"></f-image>
+                        <f-image v-bind:ggh="movierecommand"></f-image>
                     </div>
                 </div>
                 <div style="width: 730px; ">
@@ -78,18 +80,19 @@
                     </div>
                     <div style="margin-top: 20px; display: block; font-size: 14px; text-align: left;line-height: 26px;margin-bottom: 60px;">{{text}}</div>
                     <div class="mod-title mod-title2" style="margin-bottom: 20px;">演职员表</div>
+					<!-- //展示导演及演职人员 -->
                     <div style="width: 100%; display: inline-block; margin-bottom: 60px;">
-                        <p-image v-for="item in 5"></p-image>
+                        <p-image v-bind:ggh="movieperson"></p-image>
                     </div>
                     <div class="mod-title mod-title2" style="margin-bottom: 20px;">图集</div>
                     <div style="width: 100%; height: 258px; display: inline-block; margin-bottom: 51px;">
                         <div style="float: right; width: 260px;">
-                            <el-image :src="psrc2"></el-image>
-                            <el-image :src="psrc3"></el-image>
-                            <el-image :src="psrc4"></el-image>
-                            <el-image :src="psrc5"></el-image>
+                            <el-image :src="psrc2" style="width: 126px; height: 126px;"></el-image>
+                            <el-image :src="psrc3" style="width: 126px; height: 126px;"></el-image>
+                            <el-image :src="psrc4" style="width: 126px; height: 126px;"></el-image>
+                            <el-image :src="psrc5" style="width: 126px; height: 126px;"></el-image>
                         </div>
-                        <el-image :src="psrc1"></el-image>
+                        <el-image :src="psrc1" style="width: 465px; height: 270px;"></el-image>
                     </div>
                     <div class="mod-title mod-title2" style="margin-top: 9px; margin-bottom: 20px;">热门评论</div>
                     <button class="but" @click="centerDialogVisible = true">写短评</button>
@@ -136,7 +139,7 @@
 
 </template>
 <script>
-	import Axios from '@/axios'
+  import Axios from '@/axios'
   import eventBus from '../eventBus.js'
   import fImage from './filmRecommend.vue'
   import pImage from './filmPerson.vue'
@@ -175,7 +178,18 @@
         psrc3: 'https://p0.meituan.net/movie/03a0fa1a2da20e950f5587d88dc1a7eb1359343.jpg@126w_126h_1e_1c',
         psrc4: 'https://p0.meituan.net/movie/db977983f55ca4eb9af6e383e1f7c8071223335.jpg@126w_126h_1e_1c',
         psrc5: 'https://p0.meituan.net/movie/39e304e30fe560ec867a2ae8feed8ab6925188.jpg@126w_126h_1e_1c',
-        text: '聪明可爱的小Q在训练师悉心照料和训练过程中成长为一只合格的导盲犬，并遇到了主人李宝庭（任达华 饰）——中年失明、孤僻又坏脾气的天才糕点师。他们共同生活的日子里，小Q逐渐融化并走入了宝庭的心里，温情的陪伴令处于低谷期的宝庭有了新生活，一人一犬，深深的羁绊，他们谁也无法再失去彼此'
+        text: '聪明可爱的小Q在训练师悉心照料和训练过程中成长为一只合格的导盲犬，并遇到了主人李宝庭（任达华 饰）——中年失明、孤僻又坏脾气的天才糕点师。他们共同生活的日子里，小Q逐渐融化并走入了宝庭的心里，温情的陪伴令处于低谷期的宝庭有了新生活，一人一犬，深深的羁绊，他们谁也无法再失去彼此',
+		showmovieimg : 'http://img5.mtime.cn/mg/2019/08/27/095059.93451706_235X132X4.jpg',
+		showmoviesrc : 'https://vfx.mtime.cn/Video/2019/08/21/mp4/190821174702960972.mp4',
+		movieperson :[{
+					name:"",
+					img:"",
+					role:"",
+				},],
+		movierecommand:[{
+					name:"",
+					img:"",
+				},]	
       }
     },
     components: {
@@ -206,17 +220,51 @@
 	    throw err
 	  }),
 	  
+	  //拿到具体剧目信息
+	  /* console.log(this.$router.history.current.query.id); */
 	  
-	  Axios.send('/displayone', 'post', {
-	      playid: this.$router.history.current.query.id,
+	  Axios.send('/api/playMain', 'get', {
+	      id: this.$router.history.current.query.id,
 	  }).then(res => {
-	      this.src=res.obj.play_pic;
-	      this.text=res.obj.play_message;
-	      this.name=res.obj.play_name;
-	      this.type=res.obj.play_type;
-	      this.length=res.obj.play_length;
-	      this.local=res.obj.play_country;
-	      console.log(res)
+		  console.log(res);
+		  var jmessage=JSON.parse(res.data.play_message);
+		  let listp = [];
+		  let listc = [];
+		  console.log(jmessage);
+	      this.src=jmessage.index.base.img;
+	      this.text=jmessage.index.synopsis;
+	      this.name=jmessage.index.base.name;
+		  this.ename=jmessage.index.base.remane;
+	      this.type=jmessage.index.base.type;
+	      this.length=jmessage.index.base.runtime;
+		  this.time=jmessage.index.base.time;
+	      this.local=jmessage.index.base.place;
+		  this.showmovieimg=jmessage.index.showMovie[0].img;
+		  this.showmoviesrc=jmessage.index.showMovie[0].link;
+		  this.psrc1=jmessage.index.showMovie[0].img;
+		  this.psrc2=jmessage.index.pic[0].img;
+		  this.psrc3=jmessage.index.pic[1].img;
+		  this.psrc4=jmessage.index.pic[2].img;
+		  this.psrc5=jmessage.index.pic[3].img;
+		 /* this.movieperson=jmessage.index.person; */
+		  for (var i = 0; i < 5; i++) {
+		  	listp.push({
+				name:jmessage.index.person[i].name,
+		  		img :jmessage.index.person[i].img,
+				role:jmessage.index.person[i].role
+		  	})
+		  }
+						
+		  for (var i = 0; i < 6; i++) {
+		  	listc.push({
+		  		name:jmessage.index.sameMovie[i].name,
+		  		img :jmessage.index.sameMovie[i].img,
+		  	})
+		  }	 					
+		  
+		  this.movieperson = listp;
+		  this.movierecommand = listc;
+	      /* console.log(res) */
 	  }, error => {
 	      console.log('displayoneAxiosError', error)
 	  }).catch(err => {

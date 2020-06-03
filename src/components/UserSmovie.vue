@@ -30,24 +30,30 @@
   export default {
     data() {
       return{
-        formdata:['https://p0.meituan.net/movie/cddf92d0ac6a0db837a1bc488b241c42267927.jpg@464w_644h_1e_1c','https://p0.meituan.net/movie/cddf92d0ac6a0db837a1bc488b241c42267927.jpg@464w_644h_1e_1c',
-        'https://p0.meituan.net/movie/cddf92d0ac6a0db837a1bc488b241c42267927.jpg@464w_644h_1e_1c','https://p0.meituan.net/movie/cddf92d0ac6a0db837a1bc488b241c42267927.jpg@464w_644h_1e_1c',
-        'https://p0.meituan.net/movie/cddf92d0ac6a0db837a1bc488b241c42267927.jpg@464w_644h_1e_1c','https://p0.meituan.net/movie/cddf92d0ac6a0db837a1bc488b241c42267927.jpg@464w_644h_1e_1c',
-        'https://p0.meituan.net/movie/cddf92d0ac6a0db837a1bc488b241c42267927.jpg@464w_644h_1e_1c','https://p0.meituan.net/movie/cddf92d0ac6a0db837a1bc488b241c42267927.jpg@464w_644h_1e_1c',
-        'https://p0.meituan.net/movie/cddf92d0ac6a0db837a1bc488b241c42267927.jpg@464w_644h_1e_1c','https://p0.meituan.net/movie/cddf92d0ac6a0db837a1bc488b241c42267927.jpg@464w_644h_1e_1c']
+        formdata: [{
+        	pic: "https://p0.meituan.net/movie/cddf92d0ac6a0db837a1bc488b241c42267927.jpg@464w_644h_1e_1c",
+        	id: null
+        }, ]
       }
     },
     mounted() {
-        Axios.send('/display', 'post', {}).then(res => {
+		console.log(99999999)
+        Axios.send('/api/playAll', 'get', {}).then(res => {
             console.log(res)
             let list = []
-            if (res.obj.length > 4) {
+            if (res.data.length > 4) {
                 for (var i = 0; i < 4; i++) {
-                    list.push(res.obj[i].play_pic)
+                    list.push({
+                    	pic: res.data[i].play_pic,
+                    	id: res.data[i].play_id
+                    })
                 }
             } else {
-                res.obj.forEach(function(item) {
-                    list.push(item.play_pic)
+                res.data.forEach(function(item) {
+                    list.push({
+                    	pic: item.play_pic,
+                    	id: item.play_id
+                    })
                 })
             }
 

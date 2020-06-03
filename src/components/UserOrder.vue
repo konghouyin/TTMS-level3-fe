@@ -1,8 +1,8 @@
 <template>
-
   <div class="cuo">
     <div class="uo1">我的订单</div>
-    <div class="uo-o">
+	<p-order v-bind:ggh="OrderData"></p-order>
+<!--    <div class="uo-o">
       <div class="uo-o-t">
       </div>
       <div class="uo-o-b">
@@ -25,33 +25,106 @@
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
   </div>
 
 </template>
 
 <script>
+import Axios from '@/axios'
+import pOrder from './Useroneorder.vue'	
+
+	
 export default {
-  data () {
+  data () { 
     return {
-      movieData: {
-        m_name: '李仁港',
-        type: '冒险,动作,爱情',
-        version: '国语2D',
-        time: '125分钟',
-        start_time: '今天 9月26 22:35',
-        price: '30',
-        studio: '3号厅',
-        position: '5号激光厅（冠名招商中） 4排9座'
-      }
-    }
-  }
+		OrderData :[{
+	  			name: '李仁港',
+	  			type: '冒险,动作,爱情',
+	  			version: '国语2D',
+	  			time: '125分钟',
+	  			start_time: '今天 9月26 22:35',
+	  			price: '30',
+	  			studio: '3号厅',
+	  			position: '5号激光厅（冠名招商中） 4排9座',
+				status :'',
+				pic:'',
+	  		},],
+/* 		TicketData :[{
+			
+				},], */	
+    }	
+  },
+  
+  components: {
+	pOrder
+  },
+  
+  mounted(){
+	Axios.send('/api/selectAllOrder', 'get', {}).then(res => {
+		console.log(res);
+		let listorder = [];
+		let flag='';
+	
+		res.data.forEach(function(item) {
+			let tseatmessage=[];
+			if(item.orderticket_status=='1')
+			{
+				flag="已支付";
+			}
+			else if(item.orderticket_status=='0')
+			{
+				flag="未支付";
+			}
+			else{
+				flag="已取消";
+			}
+			
+			var tmessage=JSON.parse(item.orderticket_history);
+			
+			
+			for (var i = 0; i < tmessage.length; i++) {
+				tseatmessage.push({
+					t_id: tmessage[i],
+					seat_row :item.ticket[i].seat_row,
+					seat_col: item.ticket[i].seat_col,
+					visible : false,
+					orderticket_status:item.orderticket_status,
+					ticket_status:item.ticket[i].ticket_status,
+				})								
+			}		
+			
+			listorder.push({
+				orderticket_id:item.orderticket_id,
+				orderticket_status:item.orderticket_status,
+				name: item.play.play_name,
+				position: item.play.room_name,
+				start_time: item.play.plan_startime,
+				status: flag,		
+				price: item.orderticket_money,
+				pic: item.play.play_pic,
+				visible:false,
+				TicketData : tseatmessage,				
+			})
+		})	
+		
+		this.OrderData=listorder;
+		
+			
+	}, error => {
+	    console.log('displayorderAxiosError', error)
+	}).catch(err => {
+	    throw err
+	})  
+  },
+  
+  
 }
 </script>
 
 <style scoped>
   .cuo{
-    height: 796px;
+    /* height: 796px; */
     width: 940px;
     border: 1px solid rgb(244,243,244);
     display: flex;
@@ -102,7 +175,7 @@ export default {
   }
 
   .uo-o-b-t-2{
-    width:480px;
+    width:240px;
     height: 110px;
     display: flex;
     flex-direction: column;
