@@ -37,26 +37,6 @@
 
 
 		mounted() {
-			/* Axios.send('/display', 'post', {}).then(res => {
-                console.log(res)
-                let list = []
-                if (res.obj.length > 4) {
-                    for (var i = 0; i < 4; i++) {
-                        list.push({pic:res.obj[i].play_pic,id:res.obj[i].play_id})
-                    }
-                } else {
-                    res.obj.forEach(function(item) {
-                        list.push({pic:item.play_pic,id:item.play_id})
-                    })
-                }
-
-                this.formdata = list
-            }, error => {
-                console.log('displayAxiosError', error)
-            }).catch(err => {
-                throw err
-            })
-			 */
 			Axios.send('/api/playAll', 'get', {}).then(res => {
 				/* console.log(res) */
 				let list = []

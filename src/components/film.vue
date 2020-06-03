@@ -226,6 +226,7 @@
 	  Axios.send('/api/playMain', 'get', {
 	      id: this.$router.history.current.query.id,
 	  }).then(res => {
+		  console.log(res);
 		  var jmessage=JSON.parse(res.data.play_message);
 		  let listp = [];
 		  let listc = [];

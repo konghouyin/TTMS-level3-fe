@@ -14,19 +14,7 @@
 			  </div>
 
 			  			    
-			  <p-ticket v-bind:ggh="item.TicketData"></p-ticket>  
-				  
-
-			  
-			<!--  <el-popover placement="top" width="160" v-model="item.visible">
-			    <p>这是一段内容这是一段内容确定删除吗？</p>
-			    <div style="text-align: right; margin: 0">
-			      <el-button size="mini" type="text" @click="item.visible = false">取消</el-button>
-			      <el-button type="primary" size="mini" @click="item.visible = false">确定</el-button>
-			    </div>
-			    <el-button slot="reference">删除</el-button>
-			  </el-popover> -->	
-
+			  <p-ticket v-bind:ggh="item.TicketData"></p-ticket>  				  
 			  
 			  <div class="uo-o-b-t-3">
 				￥{{item.price}}
@@ -34,9 +22,21 @@
 			  <div class="uo-o-b-t-4">				
 				{{item.status}}
 			  </div>
-			  <div class="uo-o-b-t-5">
-				<el-button type="danger" round>去支付</el-button>
+			  
+			  
+			  <div v-if="item.orderticket_status=='1'">
 			  </div>
+			  <div v-if="item.orderticket_status=='0'">
+				<div class="uo-o-b-t-5">
+					<el-button type="danger" round>支付</el-button>
+					<el-button type="danger" round style="margin-left: 0px;margin-top: 10px;" @click="canncelorder(item.orderticket_id)">
+						取消
+					</el-button>
+				</div>
+			  </div>
+			  <div v-if="item.orderticket_status=='-1'">
+			  </div>
+			  
 			</div>
 		  </div>
 		</div>
@@ -49,7 +49,6 @@
 	
 	
   export default {
-
     data() {
       return {
 
@@ -62,6 +61,22 @@
 	props: {
 	  ggh: Array
 	},
+	
+	methods: {
+		canncelorder(order_id) {
+			Axios.send('/api/cancelOrder', 'post', {
+				id: order_id
+			}).then(res => {
+				console.log(res)														
+				this.$router.push('user/cpn')
+			}, error => {
+				console.log('cancelOrderAxiosError', error)
+			}).catch(err => {
+				throw err
+			})
+		}
+	},
+	
   }	
 </script>
 
@@ -113,10 +128,12 @@
 	}
 	
 	.uo-o-b-t-3{
+	  margin-top: 7px;
 	  width: 90px;
 	  height: 110px;
 	}
 	.uo-o-b-t-4{
+	  margin-top: 7px;
 	  width:110px ;
 	  height: 110px;
 	}

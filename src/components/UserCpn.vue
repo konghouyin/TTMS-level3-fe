@@ -1,7 +1,7 @@
 <template>
   <div class="clpn">
 	<!-- 	style="height: 800px;" -->
-    <el-tabs :tab-position="tabPosition" v-model="activeName" >
+    <el-tabs :tab-position="tabPosition" v-model="activeName" style="min-height:300px">
       <el-tab-pane label="个人信息" name="second">
         <u-pifn></u-pifn>
       </el-tab-pane>

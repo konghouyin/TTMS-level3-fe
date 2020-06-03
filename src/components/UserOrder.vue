@@ -65,8 +65,9 @@ export default {
 		console.log(res);
 		let listorder = [];
 		let flag='';
-		let tseatmessage=[];
+	
 		res.data.forEach(function(item) {
+			let tseatmessage=[];
 			if(item.orderticket_status=='1')
 			{
 				flag="已支付";
@@ -88,10 +89,14 @@ export default {
 					seat_row :item.ticket[i].seat_row,
 					seat_col: item.ticket[i].seat_col,
 					visible : false,
+					orderticket_status:item.orderticket_status,
+					ticket_status:item.ticket[i].ticket_status,
 				})								
 			}		
 			
 			listorder.push({
+				orderticket_id:item.orderticket_id,
+				orderticket_status:item.orderticket_status,
 				name: item.play.play_name,
 				position: item.play.room_name,
 				start_time: item.play.plan_startime,
