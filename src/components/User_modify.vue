@@ -2,7 +2,6 @@
   <div class="modify_body" style="overflow: hidden;">
     <div style="overflow: hidden;margin-top: 20px;">
       <el-input placeholder="请输入人员编号" v-model="input3" class="input-with-select" style="width: 190px;float: left; margin-left: 40px;">
-        <el-button slot="append" icon="el-icon-refresh"></el-button>
       </el-input>
       <el-button type="primary" round style="float: right; margin-right: 40px;" @click="red()">重新选择</el-button>
     </div>
@@ -89,7 +88,9 @@
         }
       }
     },mounted() {
-        
+           this.input3 = this.$router.history.current.query.changeId
+           this.ruleForm.phemail = this.$router.history.current.query.changetel
+           this.ruleForm.status=this.$router.history.current.query.changestatus
         },
     methods: {
       red() {

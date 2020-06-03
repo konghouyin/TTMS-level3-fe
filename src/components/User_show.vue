@@ -68,7 +68,9 @@
                 this.$router.push({
                     path: '/manager/user/modify',
                     query: {
-                        changeId: scope.row.id
+                        changeId: scope.row.id,
+                        changetel:scope.row.tel,
+                        changestatus: scope.row.status,
                     }
                 })
             },

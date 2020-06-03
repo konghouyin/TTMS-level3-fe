@@ -118,12 +118,12 @@
                         <el-input type="textarea" :rows="7" placeholder="请输入内容" v-model="textarea">
                         </el-input>
                         <el-button :disabled="textarea===''? true:mark2===0" type="danger" style="margin-top: 20px; margin-left: 430px;"
-                            @click="open('评价成功','您评分'+mark2*2+'分:'+textarea),centerDialogVisible = false,rate = true" <!-- @click="()=>{item.visible = false;SubmitComments(textarea,mark2)}" -->>确
-                            定</el-button>
+                            @click="open('评价成功',mark2*2,textarea),centerDialogVisible = false,rate = true">确定</el-button>
 
                     </el-dialog>
                     <el-dialog :visible.sync="bjVisible" width="490px" center>
-                        <div style="height: 27.4px; padding-bottom: 10px; margin-bottom: 20px; color: #222222; font-size: 18px; border-bottom: 1px solid #eee;text-align: center;">请选择举报理由</div>
+                        <div style="height: 27.4px; padding-bottom: 10px; margin-bottom: 20px; color: #222222; font-size: 18px;
+                         border-bottom: 1px solid #eee;text-align: center;">请选择举报理由</div>
 
                             <el-radio v-for="it in reporttype" v-model="radio" :label="it">{{it}}</el-radio><br /><br /><br />
 
@@ -217,7 +217,7 @@
 	    console.log(res)
 	  }, error => {
 	    alert('评论添加失败')
-	    console.log('commentReportError', error)
+	    /* console.log('commentReportError', error) */
 	  }).catch(err => {
 	    throw err
 	  }),
@@ -231,7 +231,7 @@
 		  var jmessage=JSON.parse(res.data.play_message);
 		  let listp = [];
 		  let listc = [];
-		  console.log(jmessage);
+		  /* console.log(jmessage); */
 	      this.src=jmessage.index.base.img;
 	      this.text=jmessage.index.synopsis;
 	      this.name=jmessage.index.base.name;
@@ -275,51 +275,25 @@
 
     },
     methods: {
-        /* SubmitComments(formName) {
-        				Axios.send('/comment/add', 'post', {
-        					id: formName
-        				}).then(res => {
-        					console.log(res)
-        					this.$router.push('cpn')
-        				}, error => {
-        					console.log('deletticketAxiosError', error)
-        				}).catch(err => {
-        					throw err
-        				})
-        			}, */
-        open(title, msg) {
+
+        open(title, mark3,textarea) {
             const h = this.$createElement;
             this.$notify({
               title: title,
-              message: h('i', { style: 'color: teal'}, msg),
+              message: h('i', { style: 'color: teal'}, textarea),
               duration:1500
             });
 			if(title == '评价成功'){
-				Axios.send('/comment/add', 'post', {
-				  text:this.textarea,
-				  grade:this.mark2*2
+				Axios.send('/api/comment/add', 'post', {
+                  playId:this.$router.history.current.query.id,
+				  commentText:textarea,
+				  commentLevel:mark3
 				}).then(res => {
-				  console.log(res)
-				  this.$router.push('/user')
+				  /* console.log(res) */
+				  this.$router.push('film')
 				}, error => {
 				  alert('评论添加失败')
 				  console.log('commentAddError', error)
-				}).catch(err => {
-				  throw err
-				})
-			}else{
-				Axios.send('/report/add', 'post', {
-				  //id:fComment.formdata.id,
-				  //playid: this.$router.history.current.query.id,
-				  id:this.reportId,
-				  type:this.radio,
-				  msg:this.textarea2
-				}).then(res => {
-				  console.log(res)
-				  this.$router.push('/user')
-				}, error => {
-				  alert('********添加失败')
-				  console.log('commentReportError', error)
 				}).catch(err => {
 				  throw err
 				})
