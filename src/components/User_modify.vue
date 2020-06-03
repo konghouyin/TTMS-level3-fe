@@ -8,9 +8,6 @@
     </div>
     <div class="body_top">
       <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
-        <el-form-item label="用户名" prop="username">
-          <el-input type="text" v-model="ruleForm.username" autocomplete="off"></el-input>
-        </el-form-item>
         <el-form-item label="密码" prop="pass">
           <el-input type="password" v-model="ruleForm.pass" autocomplete="off" show-password></el-input>
         </el-form-item>
@@ -32,6 +29,7 @@
 </template>
 
 <script>
+    import Axios from '@/axios'
   export default {
     data() {
       var checkemail = (rule, value, callback) => {
@@ -90,7 +88,9 @@
           }]
         }
       }
-    },
+    },mounted() {
+        
+        },
     methods: {
       red() {
         window.location = '#/manager/user/show'
@@ -107,8 +107,9 @@
       },
       resetForm(formName) {
         this.$refs[formName].resetFields()
-      }
-    }
+      },
+
+  },
   }
 </script>
 

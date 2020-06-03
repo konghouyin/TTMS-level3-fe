@@ -17,12 +17,12 @@ import mPlanQuery from '@/components/ManagerPlanQuery'
 import mPlanAdd from '@/components/ManagerPlanAdd'
 import finance from '@/components/FinanceMain'
 import conductor from '@/components/Conductor'
+import recommend from '@/components/ManagerRecommend'
 import log from '@/components/log'
 import login from '@/components/login'
 import logon from '@/components/logon'
 
 import film from '@/components/film'
-import userAdd from '@/components/User_add'
 import commentShow from '@/components/Comment_show'
 import videoPlay from '@/components/Video_Play'
 import commentTypeFilter from '@/components/CommentType_filter'
@@ -35,6 +35,7 @@ import UserSeat from '@/components/UserSeat'
 import UserCpn from '@/components/UserCpn'
 import UserOrder from '@/components/UserOrder'
 import UserTopTest from '@/components/UserTopTest'
+import UserLike from '@/components/UserLike'
 
 import MarketBuy from '@/components/MarketBuy'
 import MarketTime from '@/components/MarketTime'
@@ -58,7 +59,7 @@ export default new Router({
     }, {
       path: 'play/add',
       component: mtable2
-    }, {
+    },{
       path: 'play/change',
       component: mPlayChange
     }, {
@@ -83,14 +84,14 @@ export default new Router({
       path: 'conductor',
       component: conductor
     }, {
+      path: 'recommend',
+      component: recommend
+    }, {
       path: 'user/show',
       component: userShow
     }, {
       path: 'user/modify',
       component: userModify
-    }, {
-      path: 'user/add',
-      component: userAdd
     }, {
       path: 'comment/show',
       component: commentShow
@@ -173,6 +174,10 @@ export default new Router({
     {
       path: 'cpn',
       component: UserCpn
+    },
+    {
+      path: 'like',
+      component: UserLike
     }
     ]
   }

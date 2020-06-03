@@ -7,7 +7,7 @@
                 <div class="timg">
                     <el-image :src="src"></el-image>
                 </div>
-				
+
                 <div class="nei">
                     <h3 class="name">{{name}}</h3>
                     <div style="margin-bottom: 14px; height: 23.2px; font-size: 18px;">{{ename}}</div>
@@ -35,9 +35,9 @@
                         <div style="height: 12px; font-size: 12px; margin-bottom: 9px;">累积票房</div>
                         <div><span style="color: #FFFFFF;">{{money}}</span>
                             <div style="padding-left: 4px;display: inline;">万</div>
-                        </div>			
+                        </div>
                     </div>
-					
+
 					<!-- 预告片 -->
 					<div style="height: 380px; width: 300px;margin-left: 600px;margin-top: -220px;">
 					    <a :href="showmoviesrc" style="width: 170ppx; height:100px ;margin-right: 10px;position: relative;">
@@ -53,9 +53,9 @@
 					    </a>
 					    <a src="" style="width: 140px; height:100px ;margin-left: 10px;"></a>
 					</div>
-	
+
                 </div>
-            
+
 			</div>
         </div>
         <div style="width: 100%;display: flex; justify-content: center;">
@@ -102,11 +102,13 @@
                     <div style="width: 730px; display: inline-block;">
                         <f-comment></f-comment>
                     </div>
-                    
-                    
-                    
+
+
+
                     <el-dialog :visible.sync="centerDialogVisible" width="550px" center>
+                        <span style="font-size: 24px;">电影评分</span>
                         <div style="padding-top: 30px;margin-bottom: 15px;color: #ffc600; text-align: center;">
+
                             <span v-show="mark2===0" style="font-size: 16px;">点击星星评分</span>
                             <span v-show="mark2!==0">{{mark2*2}} <span style="font-size: 16px;">分</span></span>
                         </div>
@@ -116,15 +118,15 @@
                         <el-input type="textarea" :rows="7" placeholder="请输入内容" v-model="textarea">
                         </el-input>
                         <el-button :disabled="textarea===''? true:mark2===0" type="danger" style="margin-top: 20px; margin-left: 430px;"
-                            @click="open('评价成功','您评分'+mark2*2+'分:'+textarea),centerDialogVisible = false,rate = true">确
+                            @click="open('评价成功','您评分'+mark2*2+'分:'+textarea),centerDialogVisible = false,rate = true" <!-- @click="()=>{item.visible = false;SubmitComments(textarea,mark2)}" -->>确
                             定</el-button>
 
                     </el-dialog>
                     <el-dialog :visible.sync="bjVisible" width="490px" center>
                         <div style="height: 27.4px; padding-bottom: 10px; margin-bottom: 20px; color: #222222; font-size: 18px; border-bottom: 1px solid #eee;text-align: center;">请选择举报理由</div>
-                        
+
                             <el-radio v-for="it in reporttype" v-model="radio" :label="it">{{it}}</el-radio><br /><br /><br />
-                        
+
                         <el-input type="textarea" :rows="4" placeholder="请输入内容" v-model="textarea2">
                         </el-input>
                         <el-button :disabled="radio===''" type="danger" style="margin-top: 20px; margin-left: 370px;"
@@ -189,7 +191,7 @@
 		movierecommand:[{
 					name:"",
 					img:"",
-				},]	
+				},]
       }
     },
     components: {
@@ -207,9 +209,9 @@
 	  eventBus.$on('centerDialogVisible', () => {
 	      this.centerDialogVisible = !this.centerDialogVisible;
 	  })
-	  
+
 	  Axios.send('/reportType/getreportType', 'get', {
-		  
+
 	  }).then(res => {
 		this.reporttype = res.obj
 	    console.log(res)
@@ -219,10 +221,10 @@
 	  }).catch(err => {
 	    throw err
 	  }),
-	  
+
 	  //拿到具体剧目信息
 	  /* console.log(this.$router.history.current.query.id); */
-	  
+
 	  Axios.send('/api/playMain', 'get', {
 	      id: this.$router.history.current.query.id,
 	  }).then(res => {
@@ -253,14 +255,14 @@
 				role:jmessage.index.person[i].role
 		  	})
 		  }
-						
+
 		  for (var i = 0; i < 6; i++) {
 		  	listc.push({
 		  		name:jmessage.index.sameMovie[i].name,
 		  		img :jmessage.index.sameMovie[i].img,
 		  	})
-		  }	 					
-		  
+		  }
+
 		  this.movieperson = listp;
 		  this.movierecommand = listc;
 	      /* console.log(res) */
@@ -270,9 +272,21 @@
 	      throw err
 	  })
 
-        
+
     },
     methods: {
+        /* SubmitComments(formName) {
+        				Axios.send('/comment/add', 'post', {
+        					id: formName
+        				}).then(res => {
+        					console.log(res)
+        					this.$router.push('cpn')
+        				}, error => {
+        					console.log('deletticketAxiosError', error)
+        				}).catch(err => {
+        					throw err
+        				})
+        			}, */
         open(title, msg) {
             const h = this.$createElement;
             this.$notify({
@@ -310,7 +324,7 @@
 				  throw err
 				})
 			}
-			
+
           }
      }
   }
