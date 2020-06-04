@@ -18,6 +18,7 @@ import mPlanAdd from '@/components/ManagerPlanAdd'
 import finance from '@/components/FinanceMain'
 import conductor from '@/components/Conductor'
 import recommend from '@/components/ManagerRecommend'
+import Trailerecommendation from '@/components/TrailerRecommendation'
 import log from '@/components/log'
 import login from '@/components/login'
 import logon from '@/components/logon'
@@ -86,6 +87,9 @@ export default new Router({
     }, {
       path: 'recommend',
       component: recommend
+    },  {
+      path: 'Trailerecommendation',
+      component: Trailerecommendation
     }, {
       path: 'user/show',
       component: userShow

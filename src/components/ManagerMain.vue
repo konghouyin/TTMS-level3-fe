@@ -109,8 +109,12 @@ export default {
       }, {
         title: '推荐流管理',
         son: [{
-          title: '推荐流管理',
+          title: '轮播图管理',
           link: '/manager/recommend'
+        },
+        {
+          title: '预告片管理',
+          link: '/manager/Trailerecommendation'
         }
         ]
       }

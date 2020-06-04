@@ -124,9 +124,7 @@
                     <el-dialog :visible.sync="bjVisible" width="490px" center>
                         <div style="height: 27.4px; padding-bottom: 10px; margin-bottom: 20px; color: #222222; font-size: 18px;
                          border-bottom: 1px solid #eee;text-align: center;">请选择举报理由</div>
-
                             <el-radio v-for="it in reporttype" v-model="radio" :label="it">{{it}}</el-radio><br /><br /><br />
-
                         <el-input type="textarea" :rows="4" placeholder="请输入内容" v-model="textarea2">
                         </el-input>
                         <el-button :disabled="radio===''" type="danger" style="margin-top: 20px; margin-left: 370px;"
@@ -224,7 +222,8 @@
 
 	  //拿到具体剧目信息
 	  /* console.log(this.$router.history.current.query.id); */
-
+        console.log("ceshi");
+        console.log(this.$router.history.current.query.id);
 	  Axios.send('/api/playMain', 'get', {
 	      id: this.$router.history.current.query.id,
 	  }).then(res => {
@@ -285,6 +284,7 @@
               duration:1500
             });
 			if(title == '评价成功'){
+                console.log(this.$router.history.current.query.id);
 				Axios.send('/api/comment/add', 'post', {
                   playId:this.$router.history.current.query.id,
 				  commentText:textarea,

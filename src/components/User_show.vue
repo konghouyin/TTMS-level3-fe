@@ -43,7 +43,9 @@
 
         },
         mounted() {
+            var status;
             Axios.send('/api/userAll', 'get', {}).then(res => {
+                console.log(res)
 
                 let list = []
                 res.data.forEach((item) => {
@@ -55,7 +57,14 @@
                         time: item.user_time
                     })
                 })
+                if(res.data.user_status=='1')
+                {
+                
+                }
+
                 this.UserData = list
+                this.UserData.power=status;
+
             }, error => {
                 console.log('displayAxiosError', error)
             }).catch(err => {

@@ -4,16 +4,16 @@
         </el-table-column>
         <el-table-column label="影片" prop="name" width="200">
         </el-table-column>
-        <el-table-column label="图片资源" prop="input" width="200" >
+
+        <el-table-column label="视频资源" prop="video" width="200" >
             <template  slot-scope="scope">
-                <el-input size="medium" placeholder="请输入链接" v-model="scope.row.input" clearable >
+                <el-input size="medium" placeholder="请输入链接" v-model="scope.row.video" clearable >
                  </el-input>
             </template>
         </el-table-column>
-
         <el-table-column label="操作">
             <div slot-scope="scope" style="display: flex;align-items:center;justify-content:space-around;">
-                <el-button type="danger" @click="open('操作成功',scope.row.id,scope.row.input)" >确定</el-button>
+                <el-button type="danger" @click="open('操作成功',scope.row)" >确定</el-button>
             </div>
         </el-table-column>
     </el-table>
@@ -40,7 +40,7 @@
             handleDelete(index, row) {
                 console.log(index, row);
             },
-            open(title,play_id,myinput) {
+            open(title,tableData) {
                 const h = this.$createElement;
                 this.$notify({
                   title: title,
@@ -48,13 +48,11 @@
                 });
             	if(title == '操作成功'){
             		Axios.send('/api/recommend/add', 'post', {
-                      playId:play_id,
-                      type:1,
-            		  msg:myinput,
-                     /* playName:name, */
-
+                      playId:tableData.id,
+            		  playLink:tableData.video,
+                      playName:tableData.name,
+                      type:2
             		}).then(res => {
-                        console.log(res)
             		}, error => {
             		  alert('查无剧目id')
             		  console.log('commentAddError', error)
@@ -67,13 +65,12 @@
         },
         mounted() {
             Axios.send('/api/link/get', 'get', {}).then(res => {
-
                 let list = []
                 res.data.forEach((item) => {
                     list.push({
                         id: item.playId,
                         name: item.playName,
-                        input: item.playRecommend,
+                        video:item.playLink
                     })
                 })
                 console.log(res)
