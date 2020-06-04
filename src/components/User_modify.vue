@@ -27,7 +27,7 @@
                     </el-checkbox-group>
                 </el-form-item>
                 <el-form-item>
-                    <el-button type="primary" @click="open(checkList,ruleForm.pass,input3,ruleForm.phemail)">确定</el-button>
+                    <el-button type="primary" @click="open('修改成功',checkList,ruleForm.pass,input3,ruleForm.phemail)">确定</el-button>
                     <el-button @click="resetForm('ruleForm')">重置</el-button>
                 </el-form-item>
             </el-form>
@@ -134,22 +134,36 @@
             red() {
                 window.location = '#/manager/user/show'
             },
-            submitForm(formName) {
-
-                this.$refs[formName].validate((valid) => {
-                    if (valid) {
-                        alert('submit!')
-                    } else {
-                        console.log('error submit!!')
-                        return false
-                    }
-                })
-            },
             resetForm(formName) {
                 this.$refs[formName].resetFields()
             },
-            /* open(checkList,ruleForm.pass,input3,ruleForm.phemail) {
+            /* open(title,checkList,ruleForm.pass,input3,phone) {
+                const h = this.$createElement;
+                this.$notify({
+                  title: title,
+                  duration:1500
+                });
+            	if(title == '修改成功'){
+            		Axios.send('/api/userEdit', 'post', {
+                      user_id:input3,
+                      user_status:2,
+            		  user_tel:phone,
+                      user_password:
+                      user_passwordchange:
+            		}).then(res => {
+                        console.log(res)
+            		}, error => {
+            		  alert('没有查询到要修改的id')
+            		  console.log('commentAddError', error)
+            		}).catch(err => {
+            		  throw err
+            		})
+            	}
 
+              } */
+            /* 
+                let statusarr = []
+                let charr = []
                 checkList.forEach((item) => {
                     if (item == "用户") {
                         charr.push("1")
@@ -185,7 +199,7 @@
             		}).catch(err => {
             		  throw err
             		})
-              } */
+               */
         },
     }
 </script>

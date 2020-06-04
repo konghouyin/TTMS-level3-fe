@@ -46,24 +46,43 @@
             var status;
             Axios.send('/api/userAll', 'get', {}).then(res => {
                 console.log(res)
-
+                let statusarr = []
+                let charr = []
                 let list = []
                 res.data.forEach((item) => {
                     list.push({
                         id: item.user_id,
                         name: item.user_name,
-                        status: item.user_status,
                         tel: item.user_tel,
                         time: item.user_time
-                    })
+                    });
+                        charr = []
+                        statusarr = item.user_status.split(',')
+                        statusarr.forEach((item) => {
+                            if (item == "1") {
+                                charr.push("用户")
+                            } else if (item == "2") {
+                                charr.push("剧院管理")
+                            } else if (item == "3") {
+                                charr.push("推荐流管理")
+                            } else if (item == "4") {
+                                charr.push("销售")
+                            } else if (item == "5") {
+                                charr.push("财务模块")
+                            } else if (item == "6") {
+                                charr.push("用户管理")
+                            } else if (item == "7") {
+                                charr.push("评论管理")
+                            } else if (item == "8") {
+                                charr.push("推送系统")
+                            } else if (item == "9") {
+                                charr.push("微信小程序")
+                            }
+                        })
                 })
-                if(res.data.user_status=='1')
-                {
-                
-                }
-
+                console.log(charr)
                 this.UserData = list
-                this.UserData.power=status;
+                this.power=charr;
 
             }, error => {
                 console.log('displayAxiosError', error)
@@ -88,7 +107,6 @@
                 console.log(k);
                 k.isShow = !k.isShow;
             }
-
         },
         computed: {
 

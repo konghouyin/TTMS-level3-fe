@@ -4,7 +4,7 @@
         </el-table-column>
         <el-table-column label="影片" prop="name" width="200">
         </el-table-column>
-        <el-table-column label="图片资源" prop="input" width="200" >
+        <el-table-column label="视频资源" prop="input" width="200" >
             <template  slot-scope="scope">
                 <el-input size="medium" placeholder="请输入链接" v-model="scope.row.input" clearable >
                  </el-input>
@@ -66,7 +66,7 @@
               }
         },
         mounted() {
-            Axios.send('/api/link/get', 'get', {}).then(res => {
+            Axios.send('/api/recommend/get', 'get', {}).then(res => {
 
                 let list = []
                 res.data.forEach((item) => {
