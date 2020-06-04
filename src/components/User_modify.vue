@@ -27,7 +27,7 @@
                     </el-checkbox-group>
                 </el-form-item>
                 <el-form-item>
-                    <el-button type="primary" @click="open('修改成功',checkList,ruleForm.pass,input3,ruleForm.phemail)">确定</el-button>
+                    <el-button type="primary" @click="open(ruleForm.pass,ruleForm.phemail,input3)">确定</el-button>
                     <el-button @click="resetForm('ruleForm')">重置</el-button>
                 </el-form-item>
             </el-form>
@@ -137,34 +137,11 @@
             resetForm(formName) {
                 this.$refs[formName].resetFields()
             },
-            /* open(title,checkList,ruleForm.pass,input3,phone) {
-                const h = this.$createElement;
-                this.$notify({
-                  title: title,
-                  duration:1500
-                });
-            	if(title == '修改成功'){
-            		Axios.send('/api/userEdit', 'post', {
-                      user_id:input3,
-                      user_status:2,
-            		  user_tel:phone,
-                      user_password:
-                      user_passwordchange:
-            		}).then(res => {
-                        console.log(res)
-            		}, error => {
-            		  alert('没有查询到要修改的id')
-            		  console.log('commentAddError', error)
-            		}).catch(err => {
-            		  throw err
-            		})
-            	}
+            open(pass,phone,input3) {
 
-              } */
-            /* 
-                let statusarr = []
+                var a
                 let charr = []
-                checkList.forEach((item) => {
+                this.checkList.forEach((item) => {
                     if (item == "用户") {
                         charr.push("1")
                     } else if (item == "剧院管理") {
@@ -185,22 +162,36 @@
                         charr.push("9")
                     }
                 }),
-            		Axios.send('/api/userEdit', 'post', {
-                      playId:this.input3
-            		  password:ruleForm.pass
-            		  tel:ruleForm.phemail,
-                      status:
-            		}).then(res => {
-            		  console.log(res)
+                a=charr.toString();
+                var b
+                var passchange
+                console.log(a)
+                if(pass==null||pass=='undefined'||pass==''){
+                    passchange='0'
+                }else{
+                    passchange='1'
+                }
+                console.log(pass)
+                console.log(input3)
+                console.log(phone)
+                console.log(passchange)
 
+            		Axios.send('/api/userEdit', 'post', {
+                      id:input3,
+                      status:a,
+            		  tel:phone,
+                      password:pass,
+                      passwordchange:passchange
+            		}).then(res => {
+                        console.log(input3)
             		}, error => {
-            		  alert('评论添加失败')
+            		  alert('没有查询到要修改的id')
             		  console.log('commentAddError', error)
             		}).catch(err => {
             		  throw err
             		})
-               */
-        },
+              }
+        }
     }
 </script>
 

@@ -7,13 +7,7 @@
                     </el-table-column>
                     <el-table-column prop="name" label="用户名">
                     </el-table-column>
-                    <el-table-column prop="power" label="权限">
-                        <template slot-scope="scope">
-                            <div slot="reference" class="name-wrapper">
-                                <el-tag size="medium" v-for="item in scope.row.power" class="card">{{ item }}</el-tag>
-                            </div>
-                        </template>
-                    </el-table-column>
+                   
                     <el-table-column prop="tel" label="电话">
                     </el-table-column>
                     <el-table-column prop="time" label="注册时间">
@@ -21,7 +15,6 @@
                     <el-table-column label="操作">
                         <div slot-scope="scope" style="display: flex;align-items:center;justify-content:space-around;">
                             <el-button size="small" type="primary" icon="el-icon-edit" circle @click="handleEdit(scope)"></el-button>
-                            <el-button size="small" type="danger" icon="el-icon-delete" circle @click="handleDelete(scope.$index, scope.row)"></el-button>
                         </div>
                     </el-table-column>
                 </el-table>
@@ -36,7 +29,9 @@
     export default {
         data() {
             return {
-                UserData: [],
+                UserData: [
+
+                ],
             }
         },
         components: {
@@ -81,9 +76,8 @@
                         })
                 })
                 console.log(charr)
-                this.UserData = list
-                this.power=charr;
-
+                this.UserData = list;
+                this.power=charr
             }, error => {
                 console.log('displayAxiosError', error)
             }).catch(err => {
