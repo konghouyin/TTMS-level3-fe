@@ -24,25 +24,25 @@
                             </el-form-item>
                         </div>
                     </el-form>
-                    <span style="color: #409EFF; display: flex; align-items: center;">该评论由用户
+                    <span style="color: #409EFF; display: flex; align-items: center;">该评论由
                         <el-tag effect="light" type="info" style="display: flex; align-items: center;margin: 0 10px;">
-                            {{props.row.user}}
+                            {{props.row.userName}}
                         </el-tag>
-                        发表，所评论影片为
+                        用户举报，举报时间是
                         <el-tag effect="light" type="info" style="display: flex; align-items: center;margin: 0 10px;">
-                            {{props.row.film}}
+                            {{props.row.reportTime}}
                         </el-tag>
                     </span>
                     <el-form label-position="left" inline class="demo-table-expand">
                         <div class="showList_title">
-                            <el-form-item label="详细内容">
-                                <span>{{ props.row.name }}</span>
+                            <el-form-item label="举报理由">
+                                <span>{{ props.row.reportText }}</span>
                             </el-form-item>
                         </div>
                     </el-form>
-                    <div class="coList_btn">
-                        <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">驳回</el-button>
-                        <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+                    <div class="coList_btn" >
+                        <el-button size="mini" @click="handleEdit(props.row.commentId)">驳回</el-button>
+                        <el-button size="mini" type="danger" @click="handleDelete(props.row.commentId)">删除</el-button>
                     </div>
                 </template>
             </el-table-column>
@@ -103,36 +103,52 @@
             }
         },
         mounted() {
+            
             Axios.send('api/comment/report', 'get', {
 
             }).then(res => {
                 console.log(res)
                 var list = []
                 res.data.forEach(function(item) {
-                    if(item.comment.commentText.length<=10){
-                        let time = new Date(item.comment.commentTime)
+                    if(item.commentText.length<=10){
+                        let time = new Date(item.commentTime)
+                        let time1 = new Date(item.reportTime)
                         let y = time.getFullYear();
                         let m = time.getMonth() + 1;
                         let d = time.getDate();
                         let h = time.getHours();
                         let mm = time.getMinutes();
                         let s = time.getSeconds();
+                        let y1 = time1.getFullYear();
+                        let m1 = time1.getMonth() + 1;
+                        let d1 = time1.getDate();
+                        let h1 = time1.getHours();
+                        let mm1 = time1.getMinutes();
+                        let s1 = time1.getSeconds();
                         list.push({
                             date: y+'-'+m+'-'+d+' '+h+':'+mm+':'+s,
-                            name: item.comment.commentText,
-                            comm: item.comment.commentText,
-                            user: item.user.userName,
-                            film: item.play.playName,
-                            ftype: item.type
+                            name: item.commentText,
+                            comm: item.commentText,
+                            user: item.targetUserName,
+                            film: item.playName,
+                            ftype: item.reportType,
+                            commentId:item.commentId,
+                            reportText:item.reportText,
+                            userName:item.userName,
+                            reportTime:y1+'-'+m1+'-'+d1+' '+h1+':'+mm1+':'+s1
                         })
                     }else{
                         list.push({
                             date: y+'-'+m+'-'+d+' '+h+':'+mm+':'+s,
-                            name: item.comment.commentText,
-                            comm: item.comment.commentText.substr(0, 10) + '........',
-                            user: item.user.userName,
-                            film: item.play.playName,
-                            ftype: item.type
+                            name: item.commentText,
+                            comm: item.commentText.substr(0, 10) + '........',
+                            user: item.targetUserName,
+                            film: item.playName,
+                            ftype: item.reportType,
+                            commentId:item.commentId,
+                            reportText:item.reportText,
+                            userName:item.userName,
+                            reportTime:y1+'-'+m1+'-'+d1+' '+h1+':'+mm1+':'+s1
                         })
                     }
                 })
@@ -146,11 +162,143 @@
             })
         },
         methods: {
-            handleEdit(index, row) {
-                console.log(index, row)
+            handleEdit(id) {
+                console.log(id)
+                Axios.send('api/comment/reject', 'post', {
+                    commentId:id
+                }).then(res => {
+                    Axios.send('api/comment/report', 'get', {
+                    
+                    }).then(res => {
+                        console.log(res)
+                        var list = []
+                        res.data.forEach(function(item) {
+                            if(item.commentText.length<=10){
+                                let time = new Date(item.commentTime)
+                                let time1 = new Date(item.reportTime)
+                                let y = time.getFullYear();
+                                let m = time.getMonth() + 1;
+                                let d = time.getDate();
+                                let h = time.getHours();
+                                let mm = time.getMinutes();
+                                let s = time.getSeconds();
+                                let y1 = time1.getFullYear();
+                                let m1 = time1.getMonth() + 1;
+                                let d1 = time1.getDate();
+                                let h1 = time1.getHours();
+                                let mm1 = time1.getMinutes();
+                                let s1 = time1.getSeconds();
+                                list.push({
+                                    date: y+'-'+m+'-'+d+' '+h+':'+mm+':'+s,
+                                    name: item.commentText,
+                                    comm: item.commentText,
+                                    user: item.targetUserName,
+                                    film: item.playName,
+                                    ftype: item.reportType,
+                                    commentId:item.commentId,
+                                    reportText:item.reportText,
+                                    userName:item.userName,
+                                    reportTime:y1+'-'+m1+'-'+d1+' '+h1+':'+mm1+':'+s1
+                                })
+                            }else{
+                                list.push({
+                                    date: y+'-'+m+'-'+d+' '+h+':'+mm+':'+s,
+                                    name: item.commentText,
+                                    comm: item.commentText.substr(0, 10) + '........',
+                                    user: item.targetUserName,
+                                    film: item.playName,
+                                    ftype: item.reportType,
+                                    commentId:item.commentId,
+                                    reportText:item.reportText,
+                                    userName:item.userName,
+                                    reportTime:y1+'-'+m1+'-'+d1+' '+h1+':'+mm1+':'+s1
+                                })
+                            }
+                        })
+                        this.tableData = list
+                    
+                    }, error => {
+                        alert('*****添加失败')
+                        console.log('commentReportError', error)
+                    }).catch(err => {
+                        throw err
+                    })
+                    alert('驳回成功')
+                }, error => {
+                    alert('驳回失败')
+                    console.log('commentReportError', error)
+                }).catch(err => {
+                    throw err
+                })
             },
-            handleDelete(index, row) {
-                console.log(index, row)
+            handleDelete(id) {
+                console.log(id)
+                Axios.send('api/comment/del', 'post', {
+                    commentId:id
+                }).then(res => {
+                    Axios.send('api/comment/report', 'get', {
+                    
+                    }).then(res => {
+                        console.log(res)
+                        var list = []
+                        res.data.forEach(function(item) {
+                            if(item.commentText.length<=10){
+                                let time = new Date(item.commentTime)
+                                let time1 = new Date(item.reportTime)
+                                let y = time.getFullYear();
+                                let m = time.getMonth() + 1;
+                                let d = time.getDate();
+                                let h = time.getHours();
+                                let mm = time.getMinutes();
+                                let s = time.getSeconds();
+                                let y1 = time1.getFullYear();
+                                let m1 = time1.getMonth() + 1;
+                                let d1 = time1.getDate();
+                                let h1 = time1.getHours();
+                                let mm1 = time1.getMinutes();
+                                let s1 = time1.getSeconds();
+                                list.push({
+                                    date: y+'-'+m+'-'+d+' '+h+':'+mm+':'+s,
+                                    name: item.commentText,
+                                    comm: item.commentText,
+                                    user: item.targetUserName,
+                                    film: item.playName,
+                                    ftype: item.reportType,
+                                    commentId:item.commentId,
+                                    reportText:item.reportText,
+                                    userName:item.userName,
+                                    reportTime:y1+'-'+m1+'-'+d1+' '+h1+':'+mm1+':'+s1
+                                })
+                            }else{
+                                list.push({
+                                    date: y+'-'+m+'-'+d+' '+h+':'+mm+':'+s,
+                                    name: item.commentText,
+                                    comm: item.commentText.substr(0, 10) + '........',
+                                    user: item.targetUserName,
+                                    film: item.playName,
+                                    ftype: item.reportType,
+                                    commentId:item.commentId,
+                                    reportText:item.reportText,
+                                    userName:item.userName,
+                                    reportTime:y1+'-'+m1+'-'+d1+' '+h1+':'+mm1+':'+s1
+                                })
+                            }
+                        })
+                        this.tableData = list
+                    
+                    }, error => {
+                        alert('*****添加失败')
+                        console.log('commentReportError', error)
+                    }).catch(err => {
+                        throw err
+                    })
+                    alert('删除成功')
+                }, error => {
+                    alert('删除失败')
+                    console.log('commentReportError', error)
+                }).catch(err => {
+                    throw err
+                })
             },
             filterHandler(value, row, column) {
                 const property = column['property']

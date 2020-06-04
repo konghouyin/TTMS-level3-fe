@@ -84,19 +84,34 @@
                     price: '30',
                     studio: '3号厅'
                 },
-                seat: [],
+                id:'',
+                seat: [[
+                    {id:321,row:1,col:1,status:0},
+                    {id:3421,row:1,col:1,status:2}
+                ],
+                [{id:3221,row:2,col:2,status:3}],
+                [{id:221,row:3,col:2,status:1}]],
                 check: [],
                 imgsrc: [require('@/assets/seat0.png'), require('@/assets/seat1.png'), require('@/assets/seat2.png'),
-                    require('@/assets/seat2.png'), require('@/assets/seat3.png')
+                    require('@/assets/seat3.png')
                 ]
             }
         },
         mounted() {
-            Axios.send('/seatQueryAll', 'post', {
-                roomid: 40
+            this.id = this.$router.history.current.query.plan_id
+            Axios.send('api/ticketList', 'get', {
+                id: this.id
             }).then(res => {
-                console.log(res)
-                let row = res.obj[res.obj.length - 1].seat_row;
+                console.log(res.data[0])
+                this.movieData.m_name = res.data[0].play_name
+                this.movieData.type = res.data[0].play_type
+                this.movieData.version = res.data[0].play_language
+                this.movieData.time = res.data[0].play_length+'min'
+                this.movieData.start_time = res.data[0].play_language
+                this.movieData.price = res.data[0].play_language
+                this.movieData.studio = res.data[0].play_language
+                
+                /* let row = res.obj[res.obj.length - 1].seat_row;
                 let col = res.obj[res.obj.length - 1].seat_col;
                 let myarr = new Array();
                 let flag = 0;
@@ -108,7 +123,7 @@
                     }
                 }
                 this.seat = myarr;
-                console.log(this.seat)
+                console.log(this.seat) */
             }, error => {
                 console.log('seatQueryAxiosError', error)
             }).catch(err => {
@@ -132,8 +147,10 @@
                 this.$refs[formName].resetFields()
             },
             buy(item){
+                console.log("dasdasdasdasdasdas")
+                console.log(item)
                 if(item.status==0){
-                    this.seat[item.row-1][item.col-1].status = 4;
+                    this.seat[item.row-1][item.col-1].status = 3;
                     this.check.push(item)
                 }
                 else if(item.status==4){
