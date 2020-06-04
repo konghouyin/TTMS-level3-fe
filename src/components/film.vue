@@ -7,7 +7,6 @@
 				<div class="timg">
 					<el-image :src="src"></el-image>
 				</div>
-
 				<div class="nei">
 					<h3 class="name">{{name}}</h3>
 					<div style="margin-bottom: 14px; height: 23.2px; font-size: 18px;">{{ename}}</div>
@@ -17,7 +16,7 @@
 						<div style="height: 13.6px;"> {{time}}</div>
 					</div>
 					<div class="action">
-						
+
 						<div class="wish" @click="chosewish()">
 							<el-image :src="isrc[rate?1:love?1:0]" style="width: 16px;height: 16px; margin-right: 2px;"></el-image>{{rate?'已看':love?'已想看':'想看'}}
 						</div>
@@ -45,7 +44,7 @@
 							<img :src="showmovieimg" style="width: 170px; height:100px" />
 							<em></em>
 						</a>
-					</div>					
+					</div>
 					<div v-if="prenum==0">
 						<div style="height: 380px; width: 300px;margin-left: 600px;margin-top: -260px;">
 							<a :href="showmoviesrc2" style="width: 140px; height:100px ;margin-right: 10px;position: relative;">
@@ -103,7 +102,7 @@
 					</div>
 
 
-					<el-dialog :visible.sync="centerDialogVisible" width="550px" center>
+					<!-- 					<el-dialog :visible.sync="centerDialogVisible" width="550px" center>
 						<span style="font-size: 24px;">电影评分</span>
 						<div style="padding-top: 30px;margin-bottom: 15px;color: #ffc600; text-align: center;">
 
@@ -117,10 +116,39 @@
 						</el-input>
 						<el-button :disabled="textarea===''? true:mark2===0" type="danger" style="margin-top: 20px; margin-left: 430px;"
 						 @click="open('评价成功','您评分'+mark2*2+'分:'+textarea),centerDialogVisible = false,rate = true" <!-- @click="()=>{item.visible = false;SubmitComments(textarea,mark2)}"
-						 -->>确
-							定</el-button>
+						 -->
+					<!-- 确定 -->
+					<!-- </el-button>
+					</el-dialog> -->
+
+
+
+					<el-dialog :visible.sync="centerDialogVisible" width="550px" center>
+						<span style="font-size: 24px;">电影评分</span>
+						<div style="padding-top: 30px;margin-bottom: 15px;color: #ffc600; text-align: center;">
+
+							<span v-show="mark2===0" style="font-size: 16px;">点击星星评分</span>
+							<span v-show="mark2!==0">{{mark2*2}} <span style="font-size: 16px;">分</span></span>
+						</div>
+						<div style="display: flex;justify-content: center; margin-bottom: 30px; ">
+							<el-rate id="lar-star" v-model="mark2" text-color="#ff9900"></el-rate>
+						</div>
+						<el-input type="textarea" :rows="7" placeholder="请输入内容" v-model="textarea">
+						</el-input>
+						<el-button :disabled="textarea===''? true:mark2===0" type="danger" style="margin-top: 20px; margin-left: 430px;"
+						 @click="open('评价成功',mark2*2,textarea),centerDialogVisible = false,rate = true">确定</el-button>
 
 					</el-dialog>
+
+
+
+
+
+
+
+
+
+
 					<el-dialog :visible.sync="bjVisible" width="490px" center>
 						<div style="height: 27.4px; padding-bottom: 10px; margin-bottom: 20px; color: #222222; font-size: 18px; border-bottom: 1px solid #eee;text-align: center;">请选择举报理由</div>
 
@@ -260,17 +288,17 @@
 
 					/* 循环添加预告片*/
 					if (jmessage.index.showMovie.length > 2) {
-						this.prenum=0;
+						this.prenum = 0;
 						this.showmovieimg = jmessage.index.showMovie[0].img;
 						this.showmoviesrc = jmessage.index.showMovie[0].link;
 						this.showmovieimg2 = jmessage.index.showMovie[1].img;
-						this.showmoviesrc2 =  jmessage.index.showMovie[1].link;
+						this.showmoviesrc2 = jmessage.index.showMovie[1].link;
 					} else {
 						this.showmovieimg = jmessage.index.showMovie[0].img;
 						this.showmoviesrc = jmessage.index.showMovie[0].link;
 					}
-					
-					
+
+
 					this.psrc1 = jmessage.index.showMovie[0].img;
 					this.psrc2 = jmessage.index.pic[0].img;
 					this.psrc3 = jmessage.index.pic[1].img;
@@ -335,58 +363,38 @@
 					})
 				}
 			},
-			
-			jumpbuy(){
+
+			jumpbuy() {
 				this.$router.push({
-					path:'/user/dmovie',
-					query:{
-						id:this.$router.history.current.query.id
+					path: '/user/dmovie',
+					query: {
+						id: this.$router.history.current.query.id
 					}
 				})
 			},
 
-
-			open(title, msg) {
+			open(title, mark3, textarea) {
 				const h = this.$createElement;
 				this.$notify({
 					title: title,
 					message: h('i', {
 						style: 'color: teal'
-					}, msg),
+					}, textarea),
 					duration: 1500
 				});
 				if (title == '评价成功') {
-					Axios.send('/comment/add', 'post', {
-						text: this.textarea,
-						grade: this.mark2 * 2
+					console.log(this.$router.history.current.query.id);
+					Axios.send('/api/comment/add', 'post', {
+						playId: this.$router.history.current.query.id,
+						commentText: textarea,
+						commentLevel: mark3
 					}).then(res => {
-						console.log(res)
-						this.$router.push('/user')
-					}, error => {
-						alert('评论添加失败')
-						console.log('commentAddError', error)
-					}).catch(err => {
-						throw err
-					})
-				} else {
-					Axios.send('/report/add', 'post', {
-						//id:fComment.formdata.id,
-						//playid: this.$router.history.current.query.id,
-						id: this.reportId,
-						type: this.radio,
-						msg: this.textarea2
-					}).then(res => {
-						console.log(res)
-						this.$router.push('/user')
-					}, error => {
-						alert('********添加失败')
-						console.log('commentReportError', error)
-					}).catch(err => {
-						throw err
+						/* console.log(res) */
+						location.reload()
 					})
 				}
-
 			}
+
 		}
 	}
 </script>
