@@ -44,6 +44,7 @@
             Axios.send('/api/comment/get', 'post', {
                 playId: this.$router.history.current.query.id,
             }).then(res => {
+				console.log(res)
                 let list = []
 				var midmark
 				
