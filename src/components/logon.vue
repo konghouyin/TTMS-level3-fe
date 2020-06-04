@@ -27,6 +27,7 @@
 
 <script>
 import Axios from '@/axios'
+import md5 from '@/assets/public_md5.js'
 export default {
   data () {
     var validatePass = (rule, value, callback) => {
@@ -77,7 +78,7 @@ export default {
         if (valid) {
           Axios.send('/account/reg', 'post', {
             name: this.logon.user,
-            password: this.logon.pass
+            password: md5(this.logon.pass)
           }).then(res => {
             console.log(res)
             this.$router.push('/user')

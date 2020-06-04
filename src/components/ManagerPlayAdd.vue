@@ -53,12 +53,12 @@
             return {
                 type: "立即添加",
                 options: [{
-                        value: '正在热映',
-                        label: '正在热映'
+                        value: '已上映',
+                        label: '已上映'
                     },
                     {
-                        value: '即将上线',
-                        label: '即将上线'
+                        value: '即将上映',
+                        label: '即将上映'
                     },
                     {
                         value: '已下线',
@@ -117,11 +117,11 @@
         props: ["id"],
         methods: {
             analysis() {
-                Axios.send('/analysis', 'post', {
-                    path: this.ruleForm.url
+                Axios.send('/api/query', 'get', {
+                    url: this.ruleForm.url
                 }).then(res => {
                     console.log(res)
-                    let msg = res.obj
+                    let msg = res.data
                     this.ruleForm.name = msg.name
                     this.ruleForm.type = msg.type
                     this.ruleForm.director = msg.director.map((item) => {
@@ -146,20 +146,19 @@
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
                         if (this.id) {
-                            Axios.send('/updateplay', 'post', {
+                            Axios.send('/api/playEdit', 'post', {
                                 id: this.id,
-                                path: this.ruleForm.url,
+                                url: this.ruleForm.url,
                                 name: this.ruleForm.name,
                                 type: this.ruleForm.type,
                                 director: this.ruleForm.director,
-                                performer: this.ruleForm.actor,
-                                length: this.ruleForm.length,
+                                actor: this.ruleForm.actor,
+                                timelong: this.ruleForm.length,
                                 country: this.ruleForm.country,
                                 language: this.ruleForm.language,
                                 status: this.ruleForm.status,
                                 pic: this.ruleForm.img,
-                                link: this.ruleForm.link,
-                                comment: this.ruleForm.comment
+                                link: this.ruleForm.link
                             }).then(res => {
                                 console.log(res)
                                 alert("更新成功")
@@ -172,19 +171,18 @@
                                 throw err
                             })
                         } else {
-                            Axios.send('/addplay', 'post', {
-                                path: this.ruleForm.url,
+                            Axios.send('/api/playAdd', 'post', {
+                                url: this.ruleForm.url,
                                 name: this.ruleForm.name,
                                 type: this.ruleForm.type,
                                 director: this.ruleForm.director,
-                                performer: this.ruleForm.actor,
-                                length: this.ruleForm.length,
+                                actor: this.ruleForm.actor,
+                                timelong: this.ruleForm.length,
                                 country: this.ruleForm.country,
                                 language: this.ruleForm.language,
                                 status: this.ruleForm.status,
                                 pic: this.ruleForm.img,
-                                link: this.ruleForm.link,
-                                comment: this.ruleForm.comment
+                                link: this.ruleForm.link
                             }).then(res => {
                                 console.log(res)
                                 alert("添加成功")
@@ -211,10 +209,10 @@
         watch: {
             id(newValue, oldValue) {
                 this.ruleForm.comment = false
-                Axios.send('/displayone', 'post', {
-                    playid: newValue
+                Axios.send('/api/playMain', 'get', {
+                    id: newValue
                 }).then(res => {
-                    let msg = res.obj
+                    let msg = res.data
                     this.ruleForm.url = msg.play_path
                     this.ruleForm.name = msg.play_name
                     this.ruleForm.type = msg.play_type

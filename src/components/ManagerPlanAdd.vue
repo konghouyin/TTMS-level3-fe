@@ -12,6 +12,15 @@
                 </el-option>
             </el-select>
         </el-form-item>
+        <el-form-item label="语言" prop="language" style="display: inline-block;">
+            <el-select v-model="ruleForm.language" filterable placeholder="请选择">
+                <el-option v-for="item in options3" :key="item.value" :label="item.label" :value="item.value">
+                </el-option>
+            </el-select>
+        </el-form-item>
+        <el-form-item label="价格" prop="money" style="display: inline-block;">
+            <el-input-number v-model="ruleForm.money" :precision="1" :step="0.1" :max="99"></el-input-number>
+        </el-form-item>
         <el-form-item label="开始时间" required prop="date">
             <el-date-picker style="width:540px" v-model="ruleForm.date" type="datetime" placeholder="选择日期时间">
             </el-date-picker>
@@ -35,12 +44,16 @@
         data() {
             return {
                 options: [{
-                    value: '选项1',
-                    label: '罗小黑战记'
+                    value: '',
+                    label: ''
                 }],
                 options2: [{
-                    value: '选项1',
-                    label: '1号厅'
+                    value: '',
+                    label: ''
+                }],
+                options3: [{
+                    value: '',
+                    label: ''
                 }],
                 value: '',
                 ruleForm: {
@@ -49,6 +62,9 @@
                     name: '',
                     room: '',
                     date: '',
+                    language: '',
+                    money: '',
+                    play_length: ''
                 },
                 rules: {
                     name: [{
@@ -61,6 +77,11 @@
                         message: '请选择影厅名称',
                         trigger: 'change'
                     }],
+                    language: [{
+                        required: true,
+                        message: '请选择语言',
+                        trigger: 'change'
+                    }],
                     date: [{
                         type: 'date',
                         required: true,
@@ -71,13 +92,12 @@
             };
         },
         mounted() {
-            Axios.send('/display', 'post', {}).then(res => {
-                console.log(res)
+            Axios.send('/api/playAll', 'get', {}).then(res => {
                 let list = []
-                res.obj.forEach((item) => {
+                res.data.forEach((item) => {
                     list.push({
                         value: item.play_id,
-                        label: item.play_name
+                        label: item.play_name,
                     })
                 })
                 this.options = list
@@ -86,11 +106,53 @@
             }).catch(err => {
                 throw err
             })
+            Axios.send('/api/roomAll', 'get', {}).then(res => {
+                let list1 = []
+                res.data.forEach((item) => {
+                    list1.push({
+                        value: item.room_id,
+                        label: item.room_name
+                    })
+                })
+                this.options2 = list1
+            }, error => {
+                console.log('cinemaQueryAxiosError', error)
+            }).catch(err => {
+                throw err
+            })
         },
         methods: {
             submitForm(formName) {
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
+                        let planarr = []
+                        let time = new Date(this.ruleForm.date)
+                        time = new Date(time.getTime() + 1000 * 60 * (this.ruleForm.long + this.ruleForm.play_length))
+                        for (let i = 0; i < this.ruleForm.num; i++) {
+                            let y = time.getFullYear();
+                            let m = time.getMonth() + 1;
+                            let d = time.getDate();
+                            let h = time.getHours();
+                            let mm = time.getMinutes();
+                            let s = time.getSeconds();
+                            planarr.push({
+                                room: this.ruleForm.room,
+                                play: this.ruleForm.name,
+                                language: this.ruleForm.language,
+                                startime:y+'-'+m+'-'+d+' '+h+':'+mm+':'+s,
+                                money:this.ruleForm.money
+                            })
+                            time = new Date(time.getTime() + 1000 * 60 * (this.ruleForm.long + this.ruleForm.play_length))
+                        }
+                       Axios.send('/api/planAdd', 'POST', {
+                            plan: planarr
+                        }).then(res => {
+                            alert("添加成功")
+                        }, error => {
+                            console.log('displayoneAxiosError', error)
+                        }).catch(err => {
+                            throw err
+                        })
                         alert('submit!');
                     } else {
                         console.log('error submit!!');
@@ -100,6 +162,33 @@
             },
             resetForm(formName) {
                 this.$refs[formName].resetFields();
+            }
+        },
+        watch: {
+            'ruleForm.name': {
+                handler: function(val, oldVal) {
+                    Axios.send('/api/playMain', 'get', {
+                        id: val
+                    }).then(res => {
+                        let msg = res.data
+                        let list = msg.play_language.split('/')
+                        let list1 = []
+                        this.ruleForm.play_length = parseInt(msg.play_length)
+                        console.log(this.ruleForm.play_length)
+                        list.forEach((item) => {
+                            list1.push({
+                                value: item,
+                                label: item,
+                            })
+                        })
+                        this.options3 = list1
+                    }, error => {
+                        console.log('displayoneAxiosError', error)
+                    }).catch(err => {
+                        throw err
+                    })
+                },
+                deep: true
             }
         }
     }

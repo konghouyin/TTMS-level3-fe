@@ -22,7 +22,8 @@
             }
         },
         mounted() {
-           this.id = this.$router.history.current.query.changeId
+           this.input3 = this.$router.history.current.query.changeId
+           
         },
         methods: {
             red() {

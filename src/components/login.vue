@@ -35,6 +35,7 @@
 <script>
 
 import Axios from '@/axios'
+import md5 from '@/assets/public_md5.js'
 export default {
   data () {
     return {
@@ -51,7 +52,7 @@ export default {
         if (valid) {
           Axios.send('/account/login', 'post', {
             name: this.login.user,
-            password: this.login.password
+            password: md5(this.login.password) 
           }).then(res => {
             /* console.log(res) */
 			localStorage.setItem('token', res.token);
