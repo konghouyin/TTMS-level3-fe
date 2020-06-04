@@ -55,6 +55,7 @@
 				}).then(res => {
 					/* console.log(res) */															
 					this.$router.push('cpn')
+					
 				}, error => {
 					console.log('deletticketAxiosError', error)
 				}).catch(err => {

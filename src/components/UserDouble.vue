@@ -12,17 +12,16 @@
     <div class="three_box_min">
       <div  style="height:60px;width:300px;text-align: left;display: flex;align-items:flex-end;border-bottom: 2px solid rgb(220,220,220);">
         <div class="ud-t1">热门预告片</div>
+				
       </div>
 
-      <div style="height: 380px; width: 300px; display: flex; flex-direction: row; flex-wrap: wrap;align-content: flex-start;">
-          <a href="https://vfx.mtime.cn/Video/2019/08/21/mp4/190821174702960972.mp4" style="width: 140px; height:100px ;margin-right: 10px;position: relative;">
-            <img src="http://img5.mtime.cn/mg/2019/08/27/095059.93451706_235X132X4.jpg" style="width: 140px; height:100px" />
-            <em></em>
-          </a>
-          <a src="" style="width: 140px; height:100px ;margin-left: 10px;"></a>
-          <div style="width: 140px;height:20px;margin-right: 10px;">罗小黑战记</div>
-          <div style="width: 140px;height:10px;margin-left: 10px;"></div>
-      </div>
+	<!-- display: flex;width: 240px; flex-direction: row; flex-wrap:wrap -->
+	<!-- align-content: flex-start; -->
+      <!-- <div style="height: 380px; width: 300px; display: flex; flex-direction: row; flex-wrap: wrap;">
+		  	  		
+      </div> -->
+	  <p-trailer></p-trailer>	
+	  
     </div>
    </div>
 
@@ -30,6 +29,7 @@
 
 <script>
  import pModl from './UserpModl.vue'
+ import pTrailer from './UserDisplayTrailer.vue'
  export default {
    data() {
      return{
@@ -38,6 +38,7 @@
    },
    components: {
      pModl,
+	 pTrailer,
    },
    props: {
 

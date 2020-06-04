@@ -159,7 +159,6 @@ export default {
 			console.log(res.data.user_hobby);
 			/* this.dynamicTags=res.data.user_hobby; */
 			this.dynamicTags =res.data.user_hobby.split(',')			
-			
 			this.ruleForm.resource=rmidsex;
 			this.ruleForm.tel=res.data.user_tel	;	
 			this.ruleForm.desc=res.data.user_signal;

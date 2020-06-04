@@ -65,6 +65,7 @@ export default {
 		console.log(res);
 		let listorder = [];
 		let flag='';
+		var timetime;
 	
 		res.data.forEach(function(item) {
 			let tseatmessage=[];
@@ -83,6 +84,8 @@ export default {
 			var tmessage=JSON.parse(item.orderticket_history);
 			
 			
+			timetime=new Date(item.play.plan_startime).toLocaleString();
+			
 			for (var i = 0; i < tmessage.length; i++) {
 				tseatmessage.push({
 					t_id: tmessage[i],
@@ -99,7 +102,7 @@ export default {
 				orderticket_status:item.orderticket_status,
 				name: item.play.play_name,
 				position: item.play.room_name,
-				start_time: item.play.plan_startime,
+				start_time: timetime,
 				status: flag,		
 				price: item.orderticket_money,
 				pic: item.play.play_pic,

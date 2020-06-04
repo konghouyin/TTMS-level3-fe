@@ -2,8 +2,8 @@
     <div class="u-pic-cc">
       <div class="block">
         <el-carousel height="370px">
-          <el-carousel-item v-for="item in 4" :key="item">
-            <img src="http://gw.alicdn.com/tfs/TB1GRxRfZLJ8KJjy0FnXXcFDpXa-1920-360.jpg" style="height: 370px;" />
+          <el-carousel-item v-for="item in formdata">
+            <img :src="item.link" style="height: 370px;" />
             <h3 class="small"></h3>
           </el-carousel-item>
         </el-carousel>
@@ -13,10 +13,40 @@
 </template>
 
 <script>
+  import Axios from '@/axios'
   export default {
     data() {
-      return{}
+      return{
+        formdata:[]
+      }
     },
+
+    mounted() {
+    	Axios.send('/api/link/get', 'post', {}).then(res => {
+			console.log(res)
+    		let list = []
+    		if (res.data.length > 4) {
+    			for (var i = 0; i < 4; i++) {
+    				list.push({
+    					link: res.data[i].playRecommend,
+    				})
+    			}
+    		} else {
+    			res.data.forEach(function(item) {
+    				list.push({
+    					link: item.playLink,
+    				})
+    			})
+    		}
+    		this.formdata = list
+    	}, error => {
+    		console.log('displayTrailerAxiosError', error)
+    	}).catch(err => {
+    		throw err
+    	})
+    },
+
+
   }
 </script>
 
