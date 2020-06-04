@@ -44,17 +44,20 @@
             Axios.send('/api/comment/get', 'post', {
                 playId: this.$router.history.current.query.id,
             }).then(res => {
-                console.log(res)
                 let list = []
-
+				var midmark
+				
                 res.data.forEach(function(item) {
+					midmark=item.comment.commentLevel/2
+					
                     list.push({
-                        id: item.commentId,
-                        name: item.user_name,
-                        text: item.commentText,
-						date :item.commentTime,
-						mark :item.commentLevel,
+                        id: item.comment.commentId,
+                        name: item.user.userName,
+                        text: item.comment.commentText,
+						date: item.comment.commentTime,
+						mark: midmark,
                     })
+					
                 })
                 this.formdata = list
             }, error => {

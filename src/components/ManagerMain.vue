@@ -79,10 +79,7 @@ export default {
           title: '人员查询',
           link: '/manager/user/show'
         },
-        {
-          title: '人员添加',
-          link: '/manager/user/add'
-        }, {
+         {
           title: '人员修改',
           link: '/manager/user/modify'
         }
@@ -109,6 +106,13 @@ export default {
           link: '/manager/market/refund'
         }
         ]
+      }, {
+        title: '推荐流管理',
+        son: [{
+          title: '推荐流管理',
+          link: '/manager/recommend'
+        }
+        ]
       }
       ]
     }
@@ -118,7 +122,6 @@ export default {
     mForm
   },
   props: {
-
   }
 }
 </script>
@@ -131,7 +134,6 @@ export default {
     align-items: center;
     height: 100%;
   }
-
   .manager-local-father {
     width: 900px;
   }

@@ -7,6 +7,7 @@
       <el-dropdown-menu slot="dropdown">
         <el-dropdown-item command="cpn">个人信息</el-dropdown-item>
         <el-dropdown-item command="cpn">订单信息</el-dropdown-item>
+        <el-dropdown-item command="cpn">用户喜欢</el-dropdown-item>
         <el-dropdown-item command="">注销</el-dropdown-item>
       </el-dropdown-menu>
     </el-dropdown>

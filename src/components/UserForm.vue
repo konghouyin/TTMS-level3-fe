@@ -32,8 +32,8 @@
                 <div class="uftime-1">
                   上映时间：{{movieData.start_time}}
                 </div>
-                <img class="uftime-img" src="https://img.alicdn.com/bao/uploaded/i2/TB1RstSXmSD3KVjSZFKXXb10VXa_.jpg_160x160.jpg"></img>
-                <img class="uftime-img" src="https://img.alicdn.com/bao/uploaded/i2/TB1RstSXmSD3KVjSZFKXXb10VXa_.jpg_160x160.jpg"></img>
+                <img class="uftime-img" :src="movieData.img1" style="height: 107px;width: 107px;"></img>
+                <img class="uftime-img" :src="movieData.img2" style="height: 107px;width: 107px;"></img>
               </div>
            </div>
 
@@ -51,21 +51,19 @@
 
 	<div style="margin: 0 auto; width:1050px;margin-top: 30px;">
 		<el-table :data="tableData" stripe style="width: 1050px " class="tex">
-			<el-table-column prop="start_time" label="放映时间" width="180">
+			<el-table-column prop="start_time" label="放映时间" width="180" align="center">
 			</el-table-column>
-			<el-table-column prop="lauguage" label="语言版本" width="180">
+			<el-table-column prop="lauguage" label="语言版本" width="180" align="center">
 			</el-table-column>
-			<el-table-column prop="studio" label="放映厅">
+			<el-table-column prop="studio" label="放映厅" align="center">
 			</el-table-column>
-			<el-table-column prop="address" label="座位情况">
+			<el-table-column prop="seat_num" label="座位情况" align="center">
 			</el-table-column>
-			<el-table-column prop="price" label="现价/影院价（元）">
+			<el-table-column prop="price" label="现价/影院价（元）" align="center">
 			</el-table-column>
-			<el-table-column label="选座购票">
+			<el-table-column label="选座购票" align="center">
 				<template slot-scope="scope">
 					<el-button type="danger" style="color: white;text-decoration: none;" @click="SeatClick(scope.row)">
-						<!-- <router-link :to="{path:'/user/seat',query: {id: prop="plan_id"}}" style="color:white;text-decoration: none;">
-							选座购票</router-link> -->
 						选座购票
 					</el-button>
 				</template>
@@ -81,28 +79,6 @@
         data() {
             return {
                 tableData: [],
-				/* {
-					plan_id:'',
-				    start_time: '2016-05-02',
-				    lauguage: '王小虎',
-				    studio: '上海市普陀区金沙江路 1518 弄',
-					price:'',
-				}, {
-				    start_time: '2016-05-02',
-				    lauguage: '王小虎',
-				    studio: '上海市普陀区金沙江路 1518 弄',
-				    price:'',
-				}, {
-				    start_time: '2016-05-02',
-				    lauguage: '王小虎',
-				    studio: '上海市普陀区金沙江路 1518 弄',
-				    price:'',
-				}, {
-				    start_time: '2016-05-02',
-				    lauguage: '王小虎',
-				    studio: '上海市普陀区金沙江路 1518 弄',
-				    price:'',
-				} */
 
                 movieData: {
                     dirctor: '李仁港',
@@ -114,17 +90,21 @@
                     start_time: '上映时间：2019-09-30 08:00',
                     src:'',
                     name:'',
-                    /* dsrc1:'',
-                    dsrc2:'', */
+					img1:'',
+					img2:'',
                 }
             }
         },
 
         mounted() {
+			
+			/* 请求剧目详细信息 */
+			var tureactors='';
             Axios.send('/api/playMain', 'get', {
                 id: this.$router.history.current.query.id,
             }).then(res => {
 				var jmessage=JSON.parse(res.data.play_message);
+				console.log(jmessage);
 
 				this.movieData.src = jmessage.index.base.img;
 				this.movieData.dirctor=jmessage.index.base.director[0].name;
@@ -133,53 +113,48 @@
 				this.movieData.time =jmessage.index.base.runtime;			
 				this.movieData.start_time=jmessage.index.base.time;
 				this.movieData.name=jmessage.index.base.name;
-                /* this.movieData.actor =res.obj.play_performer; */
-               /* this.movieData.type =res.obj.play_type;
-                this.movieData.time =res.obj.play_length;
-                this.movieData.name =res.obj.play_name;
-                this.movieData.start_time=JSON.parse(res.obj.play_message).index.base.time				
-
-                this.movieData.neirong = JSON.parse(res.obj.play_message).index.synopsis;
-                if(res.obj.play_performer.length>80)
-                {
-                    this.movieData.actor=res.obj.play_performer.substr(0,80)+"......";
-                }
-
-                /* this.movieData.dsrc1=JSON.parse(res.obj.play_message).index.person[0].img;
-                this.movieData.dsrc2=JSON.parse(res.obj.play_message).index.person[1].img; */
-                /* this.name = res.obj.play_name;
-                this.type = res.obj.play_type;
-                this.length = res.obj.play_length;
-                this.local = res.obj.play_country; */
+				this.movieData.img1=jmessage.index.pic[0].img;
+				this.movieData.img2=jmessage.index.pic[1].img;							
+				
+				jmessage.index.person.forEach(function(item) {
+					tureactors=tureactors+item.name+',';
+				})
+				this.movieData.actor=tureactors+'......';
 				
 				if(jmessage.index.synopsis.length>120)
 				{
 				    this.movieData.neirong=jmessage.index.synopsis.substr(0,120)+"......";
 				}
-
-                /* this.movieData = list */
-                console.log(res)
+                
             }, error => {
                 console.log('displayoneAxiosError', error)
             }).catch(err => {
                 throw err
             })
-			
-			
-			
+
+			/* 请求剧目演出计划 */
 			Axios.send('/api/planList', 'get', {
 			    id: this.$router.history.current.query.id,
 			}).then(res => {
 			    console.log(res)
 				let listplan=[];
+				var timetime;
+				var year;
+				
+				
 				
 				res.data.forEach(function(item) {
+					timetime=new Date(item.plan_startime).toLocaleString();					
+					/* console.log("测试")
+					console.log(timetime) */
+					
 					listplan.push({
 						plan_id:item.plan_id,
-						start_time: item.plan_startime,
+						start_time: timetime,
 						lauguage : item.plan_language,
 						studio: item.room_name,
 						price: item.plan_money,
+						seat_num: item.seat_num,
 					})
 				})			
 				this.tableData=listplan;
@@ -193,7 +168,6 @@
 		
 		methods: {
 			SeatClick(tablerow) {
-				/* window.location.href = "/user/seat?id=" + tablerow.plan_id; */
 				this.$router.push({
 					path:'/user/seat',
 					query:{
