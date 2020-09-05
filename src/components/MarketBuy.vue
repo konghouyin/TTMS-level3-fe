@@ -53,6 +53,7 @@
     },
     mounted() {
       eventBus.$emit('buyadd', 0)
+			
     },
     methods: {
       addlink: function() {

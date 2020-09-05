@@ -22,8 +22,8 @@
             <div style="width: 100%; height: 480px; overflow: auto;">
                 <div style="overflow-x: auto; overflow-y: auto; width: 700px; float: right;">
                     <div style="height: 26px;margin-bottom: 10px;" v-for="arr in seat">
-                        <el-image :src="imgsrc[item.status]" style="margin-left: 5px; margin-right: 5px; float: left;" v-for="item in arr"
-                            @click="buy(item)"></el-image>
+                        <el-image :src="imgsrc[item.status]" style="margin-left: 5px; margin-right: 5px; float: left;"
+                            v-for="item in arr" @click="buy(item)"></el-image>
                     </div>
                 </div>
                 <div style="width: 52px; height: 480px;">
@@ -36,34 +36,35 @@
         <div class="ub-r">
             <div class="ub-r-b">
                 <div class="ub-r-b-ob-1">
-                    <img src="https://p0.meituan.net/movie/c5975d98fc484027ff55d813ab3b2daa427032.jpg@115w_158h_1e_1c"
-                        class="urbo1-l"></img>
+                    <el-image style="width: 100px; height: 145px" :src="url"></el-image>
                     <div class="urbo1-r ">
                         <div class="urbo1-r-1">
-                            <h3>{{movieData.m_name}}</h3>
+                            <h3>{{m_name}}</h3>
                         </div>
                         <div class="urbo1-r-23">
-                            类型 : {{movieData.type}}
+                            类型 : {{type}}
                         </div>
                         <div class="urbo1-r-23">
-                            时长 : {{movieData.time}}
+                            时长 : {{time}}
                         </div>
                     </div>
                 </div>
                 <div class="ub-r-b-ob-2">
-
-                    <div class="urbo2-o">影厅版本 : {{movieData.studio}}</div>
-                    <div class="urbo2-o">版本 : {{movieData.version}}</div>
-                    <div class="urbo2-o">场次 : {{movieData.start_time}}</div>
-                    <div class="urbo2-o">票价 : {{movieData.price}}</div>
+                    <div class="urbo2-o">版本 : {{studio}}</div>
+                    <div class="urbo2-o">场次 : {{start_time}}</div>
+                    <div class="urbo2-o">票价 : {{price}}</div>
                 </div>
                 <div class="ub-r-b-ob">
                     <span class="ticket" data-row-id="5" data-column-id="06" data-index="5-06" v-for="item in check">
                         {{item.row}}排{{item.col}}座
                     </span>
                 </div>
-                <div class="ub-r-b-ob-4">
+                <div @click="order()" v-show="ifshow">
                     <el-button type="primary" style="margin-top: 50px; width:180px;"><a style="color: white;">确认选座</a></el-button>
+                </div>
+                <div v-show="!ifshow" style="height: 40px;">
+                    <el-button @click="ok()" type="primary" style="margin-top: 50px; width:80px;"><a style="color: white;">支付</a></el-button>
+                    <el-button @click="no()" type="danger" style="margin-top: 20px; width:80px;"><a style="color: white;">取消</a></el-button>
                 </div>
             </div>
         </div>
@@ -75,22 +76,17 @@
     export default {
         data() {
             return {
-                movieData: {
-                    m_name: '李仁港',
-                    type: '冒险,动作,爱情',
-                    version: '国语2D',
-                    time: '125分钟',
-                    start_time: '今天 9月26 22:35',
-                    price: '30',
-                    studio: '3号厅'
-                },
-                id:'',
-                seat: [[
-                    {id:321,row:1,col:1,status:0},
-                    {id:3421,row:1,col:1,status:2}
-                ],
-                [{id:3221,row:2,col:2,status:3}],
-                [{id:221,row:3,col:2,status:1}]],
+                ifshow: true,
+                orderid: '',
+                id: '',
+                type: '',
+                m_name: '',
+                time: '',
+                start_time: '',
+                price: '',
+                studio: '',
+                url: '',
+                seat: '',
                 check: [],
                 imgsrc: [require('@/assets/seat0.png'), require('@/assets/seat1.png'), require('@/assets/seat2.png'),
                     require('@/assets/seat3.png')
@@ -102,28 +98,55 @@
             Axios.send('api/ticketList', 'get', {
                 id: this.id
             }).then(res => {
-                console.log(res.data[0])
-                this.movieData.m_name = res.data[0].play_name
-                this.movieData.type = res.data[0].play_type
-                this.movieData.version = res.data[0].play_language
-                this.movieData.time = res.data[0].play_length+'min'
-                this.movieData.start_time = res.data[0].play_language
-                this.movieData.price = res.data[0].play_language
-                this.movieData.studio = res.data[0].play_language
-                
-                /* let row = res.obj[res.obj.length - 1].seat_row;
-                let col = res.obj[res.obj.length - 1].seat_col;
-                let myarr = new Array();
-                let flag = 0;
-                for (var i = 0; i < row; i++) {
-                    myarr[i] = new Array();
-                    for (var j = 0; j < col; j++) {
-                        myarr[i][j] = {id:res.obj[flag].seat_id,row:res.obj[flag].seat_row,col:res.obj[flag].seat_col,status:res.obj[flag].seat_status};
-                        flag++;
+                let time = new Date(res.data[0].plan_startime)
+                let y = time.getFullYear();
+                let m = time.getMonth() + 1;
+                let d = time.getDate();
+                let h = time.getHours();
+                let mm = time.getMinutes();
+                let s = time.getSeconds();
+                let name = res.data[0].play_name.split(' ');
+                this.m_name = name[0]
+                this.type = res.data[0].play_type
+                this.time = res.data[0].play_length + 'min'
+                this.start_time = y + '-' + m + '-' + d + ' ' + h + ':' + mm + ':' + s
+                this.price = res.data[0].plan_money
+                this.studio = res.data[0].plan_language
+                this.url = res.data[0].play_pic
+                let arr = [];
+                for (let i = 0; i < res.data[0].room_row; i++) {
+                    arr[i] = []; //每行有10列
+                    for (let j = 0; j < res.data[0].room_col; j++) {
+                        arr[i][j] = {
+                            Tid: -1,
+                            Sid: -1,
+                            row: i + 1,
+                            col: j + 1,
+                            status: 1
+                        }
                     }
                 }
-                this.seat = myarr;
-                console.log(this.seat) */
+
+                res.dataAll.forEach((item) => {
+                    arr[item.seat_row - 1][item.seat_col - 1] = {
+                        Tid: item.ticket_id,
+                        Sid: item.seat_id,
+                        row: item.seat_row,
+                        col: item.seat_col,
+                        status: 0
+                    }
+                })
+                res.dataSale.forEach((item) => {
+                    arr[item.seat_row - 1][item.seat_col - 1] = {
+                        Tid: item.ticket_id,
+                        Sid: item.seat_id,
+                        row: item.seat_row,
+                        col: item.seat_col,
+                        status: 2
+                    }
+                })
+                this.seat = arr;
+
             }, error => {
                 console.log('seatQueryAxiosError', error)
             }).catch(err => {
@@ -146,21 +169,62 @@
             resetForm(formName) {
                 this.$refs[formName].resetFields()
             },
-            buy(item){
-                console.log("dasdasdasdasdasdas")
-                console.log(item)
-                if(item.status==0){
-                    this.seat[item.row-1][item.col-1].status = 3;
-                    this.check.push(item)
+            buy(item) {
+                if (this.ifshow) {
+                    if (item.status == 0) {
+                        this.seat[item.row - 1][item.col - 1].status = 3;
+                        this.check.push(item)
+                    } else if (item.status == 3) {
+                        this.seat[item.row - 1][item.col - 1].status = 0;
+                        this.check = this.check.filter((item) => {
+                            return item.status == 3
+                        })
+                    }
                 }
-                else if(item.status==4){
-                    this.seat[item.row-1][item.col-1].status = 0;
-                    this.check = this.check.filter((item)=>{
-                        return item.status == 4
-                    })
+            },
+            order() {
+
+                let ticket = this.check.map((item) => {
+                    return item.Tid
+                })
+                Axios.send('api/order', 'post', {
+                    ticket: ticket
+                }).then(res => {
+                    this.orderid = res.id
+                    this.ifshow = !this.ifshow
+                    alert("座位已锁定")
+                }, error => {
+                    console.log('seatQueryAxiosError', error)
+                }).catch(err => {
+                    throw err
+                })
 
 
-                }
+            },
+            ok(){
+                Axios.send('api/saleOrder', 'post', {
+                    id: this.orderid
+                }).then(res => {
+                    this.ifshow = !this.ifshow
+                    alert("订单支付成功")
+                }, error => {
+                    console.log('seatQueryAxiosError', error)
+                }).catch(err => {
+                    throw err
+                })
+
+            },
+            no(){
+                Axios.send('api/cancelOrder', 'post', {
+                    id: this.orderid
+                }).then(res => {
+                    this.ifshow = !this.ifshow
+                    alert("订单取消成功")
+                }, error => {
+                    console.log('seatQueryAxiosError', error)
+                }).catch(err => {
+                    throw err
+                })
             }
         }
 
@@ -269,11 +333,7 @@
         height: 40px;
     }
 
-    .ub-r-b-ob {
-        width: 260px;
-        height: 145px;
 
-    }
 
     .ub-r-b-ob-1 {
         display: flex;
@@ -295,20 +355,12 @@
     .ub-r-b-ob-2 {
         display: flex;
         flex-direction: column;
-
     }
 
     .urbo2-o {
         width: 260px;
         height: 36px;
         text-align: left;
-    }
-
-    .ub-r-b-ob-4 {
-        display: flex;
-        flex-direction: row;
-        justify-content: center;
-
     }
 
     .ticket {

@@ -13,8 +13,53 @@ Vue.config.productionTip = false
 Vue.use(ElementUI)
 /* eslint-disable no-new */
 new Vue({
-  el: '#app',
-  router,
-  components: { App },
-  template: '<App/>'
+	el: '#app',
+	router,
+	components: {
+		App
+	},
+	template: '<App/>'
+})
+router.beforeEach((to, from, next) => {
+	let flag = sessionStorage.getItem("quanxian")
+	let list = ["play", "cinema", "plan"]
+	let key = to.path.split("/")[2]
+	if (list.find(item => {
+			return item == key
+		})) {
+		if (flag.split(",").find(item => {
+				return item == "2"
+			})) {
+			next()
+		} else {
+			next({
+				path: '/log'
+			})
+		}
+	}
+	if (key == "user") {
+		if (flag.split(",").find(item => {
+				return item == "6"
+			})) {
+			next()
+		} else {
+			next({
+				path: '/log'
+			})
+		}
+	}
+	if (key == "comment") {
+		if (flag.split(",").find(item => {
+				return item == "7"
+			})) {
+			next()
+		} else {
+			next({
+				path: '/log'
+			})
+		}
+	}
+	console.log(to)
+	console.log(key)
+	next()
 })

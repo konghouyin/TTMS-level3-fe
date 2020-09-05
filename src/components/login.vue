@@ -36,6 +36,7 @@
 
 import Axios from '@/axios'
 import md5 from '@/assets/public_md5.js'
+import eventBus from '../eventBus.js'
 export default {
   data () {
     return {
@@ -56,7 +57,13 @@ export default {
           }).then(res => {
             /* console.log(res) */
 			localStorage.setItem('token', res.token);
-            this.$router.push('/user')
+			console.log(res)
+			if(res.data.user_status.split(",").find(item=>{ return item=="1"})){
+				this.$router.push('/user')
+			}else{
+				sessionStorage.setItem("quanxian",res.data.user_status)
+				this.$router.push('/manager')
+			}
           }, error => {
             console.log('registerAxiosError', error)
           }).catch(err => {

@@ -2,7 +2,7 @@
     <div>
         <div style="width: 100%; height: 81px; position: fixed; top: 0; background: rgb(255,255,255); z-index: 20;"></div>
         <top></top>
-        <div class="banner">
+        <div class="banner" >
             <div class="faimg">
                 <div class="timg">
                     <el-image :src="src"></el-image>
@@ -58,8 +58,8 @@
             
 			</div>
         </div>
-        <div style="width: 100%;display: flex; justify-content: center;">
-            <div class="clear" style="min-width: 1200px;">
+        <div style="width: 100%;display: flex; justify-content: center; min-width: 1200px;">
+            <div class="clear" style="min-width: 1100px;">
                 <div class="tj">
 					<!-- 相关电影推荐 -->
                     <div class="mod-title">相关电影</div>
@@ -123,11 +123,11 @@
                     <el-dialog :visible.sync="bjVisible" width="490px" center>
                         <div style="height: 27.4px; padding-bottom: 10px; margin-bottom: 20px; color: #222222; font-size: 18px; border-bottom: 1px solid #eee;text-align: center;">请选择举报理由</div>
                         
-                            <el-radio v-for="it in reporttype" v-model="radio" :label="it">{{it}}</el-radio><br /><br /><br />
+                            <el-radio v-for="it in reporttype" v-model="radio" :label="it.reporttypeId">{{it.reporttypeName}}</el-radio><br /><br /><br />
                         
                         <el-input type="textarea" :rows="4" placeholder="请输入内容" v-model="textarea2">
                         </el-input>
-                        <el-button :disabled="radio===''" type="danger" style="margin-top: 20px; margin-left: 370px;"
+                        <el-button :disabled="textarea2===''? true:radio===0" type="danger" style="margin-top: 20px; margin-left: 370px;"
                             @click="open('举报成功','正在等待管理员审核') ,bjVisible = false">确定</el-button>
                     </el-dialog>
                 </div>
@@ -148,12 +148,12 @@
   export default {
     data() {
       return {
-        radio:'',
+        radio:'1',
         reporttype:[
-          // '违法违规','色情','低俗','赌博诈骗',
-          // '人身攻击','侵犯隐私',
-          // '垃圾广告','引战','剧透','刷屏',
-          // '抢楼','视频不相关','青少年不良信息'
+          /* '违法违规','色情','低俗','赌博诈骗',
+          '人身攻击','侵犯隐私',
+          '垃圾广告','引战','剧透','刷屏',
+          '抢楼','视频不相关','青少年不良信息' */
         ],
         love: false,
         rate: false,
@@ -208,17 +208,7 @@
 	      this.centerDialogVisible = !this.centerDialogVisible;
 	  })
 	  
-	  Axios.send('/reportType/getreportType', 'get', {
-		  
-	  }).then(res => {
-		this.reporttype = res.obj
-	    console.log(res)
-	  }, error => {
-	    alert('评论添加失败')
-	    console.log('commentReportError', error)
-	  }).catch(err => {
-	    throw err
-	  }),
+	  
 	  
 	  //拿到具体剧目信息
 	  /* console.log(this.$router.history.current.query.id); */
@@ -265,6 +255,18 @@
 		  this.movieperson = listp;
 		  this.movierecommand = listc;
 	      /* console.log(res) */
+		  Axios.send('api/reportType/all', 'POST', {
+		  }).then(res => {
+		    console.log(res)
+		  	this.reporttype = res.data.filter(item=>{
+		          return item.reporttypeStatus==1
+		      })
+		  }, error => {
+		    alert('查询失败')
+		    console.log('commentReportError', error)
+		  }).catch(err => {
+		    throw err
+		  })
 	  }, error => {
 	      console.log('displayoneAxiosError', error)
 	  }).catch(err => {
@@ -282,9 +284,10 @@
               duration:1500
             });
 			if(title == '评价成功'){
-				Axios.send('/comment/add', 'post', {
-				  text:this.textarea,
-				  grade:this.mark2*2
+				Axios.send('api/comment/add', 'post', {
+					playId:this.$router.history.current.query.id,
+				  commentText:this.textarea,
+				  commentLevel:this.mark2*2
 				}).then(res => {
 				  console.log(res)
 				  this.$router.push('/user')
@@ -295,15 +298,15 @@
 				  throw err
 				})
 			}else{
-				Axios.send('/report/add', 'post', {
+				Axios.send('api/report/add', 'post', {
 				  //id:fComment.formdata.id,
 				  //playid: this.$router.history.current.query.id,
-				  id:this.reportId,
-				  type:this.radio,
-				  msg:this.textarea2
+				  commentId:this.reportId,
+				  reporttypeId:this.radio,
+				  reportText:this.textarea2
 				}).then(res => {
 				  console.log(res)
-				  this.$router.push('/user')
+				  alert('举报成功')
 				}, error => {
 				  alert('********添加失败')
 				  console.log('commentReportError', error)

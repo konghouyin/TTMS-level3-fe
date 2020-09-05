@@ -81,7 +81,7 @@ export default {
             password: md5(this.logon.pass)
           }).then(res => {
             console.log(res)
-            this.$router.push('/user')
+            this.$router.push('login')
           }, error => {
             alert('用户名重复')
             console.log('registerAxiosError', error)
